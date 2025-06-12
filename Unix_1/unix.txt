@@ -1,0 +1,27 @@
+romanshubin@Romans-MacBook-Air ~ % ls
+Applications	Downloads	Music		Pictures	unity stuff
+Desktop		Library		My project	Public
+Documents	Movies		My website	get-pip.py
+romanshubin@Romans-MacBook-Air ~ % cd Documents    
+romanshubin@Romans-MacBook-Air Documents % pwd
+/Users/romanshubin/Documents
+romanshubin@Romans-MacBook-Air Documents % cd dae_6_month 
+romanshubin@Romans-MacBook-Air dae_6_month % cd Unix_1            
+romanshubin@Romans-MacBook-Air Unix_1 % touch filename.txt
+romanshubin@Romans-MacBook-Air Unix_1 % ls
+filename.txt
+romanshubin@Romans-MacBook-Air Unix_1 % cat filename.txt 
+romanshubin@Romans-MacBook-Air Unix_1 % ls
+filename.txt
+romanshubin@Romans-MacBook-Air Unix_1 % touch filename2.txt
+romanshubin@Romans-MacBook-Air Unix_1 % ls
+filename.txt	filename2.txt
+romanshubin@Romans-MacBook-Air Unix_1 % cat filename.txt filename2.txt
+romanshubin@Romans-MacBook-Air Unix_1 % ls
+filename.txt	filename2.txt
+romanshubin@Romans-MacBook-Air Unix_1 % vim filename.txt
+romanshubin@Romans-MacBook-Air Unix_1 % vim filename2.txt
+romanshubin@Romans-MacBook-Air Unix_1 % cat filename.txt filename2.txt
+Hello
+world
+romanshubin@Romans-MacBook-Air Unix_1 % 
