@@ -1,0 +1,18 @@
+﻿1. Start the program.
+   1. Define the rules of the game.
+   2. Define the variables.
+2. Tell the user the rules.
+3. Ask the user their choice.
+4. Store the user's choice.
+5. Get the computer's choice.
+6. Compare the two choices.
+7. If the computer wins, print “You lost” and add +1 to the computer's score.
+8. If the User wins, print “You won!” and add +1 to the user’s score.
+9. Check both players score
+10.  If the user's score is 2 then print “You beat me, congrats!”
+11.  If the computer's score is 2 then print “You failed, sorry…”
+12.  If neither step 10 nor 11 are true, repeat the previous code
+13. Ask the user if they want to play again.
+14.  If the user wants to play again, reset the score and repeat the previous code.
+15. If the user does not want to play again, print “Goodbye”.
+16. End the program.
