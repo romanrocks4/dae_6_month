@@ -37,4 +37,30 @@ while program == True:
     print (".")
     time.sleep(0.5)
     print (".")
-    com_choice = random.randint(1, 3
+    com_choice = random.randint(1, 3)
+
+    if com_choice == 1:
+        com_choice_name = "Rock"
+
+    elif com_choice == 2:
+        com_choice_name = "Paper"
+
+    else:
+        com_choice_name = "Scissors"
+    
+    print("The Computer's choice is", com_choice_name)
+    print(choice_name, "vs", com_choice_name)
+
+    winner()
+    time.sleep(2)
+
+    play = input("\nWould you like to play again?\n:")
+
+    if play in[ "Yes", "yes", "y", "Y"]:
+        program = True
+
+    elif play in["No", "no", "n", "N"]:
+        print("Goodbye!")
+        program = False
+    else:
+        print("Error")
