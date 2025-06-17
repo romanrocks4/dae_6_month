@@ -9,11 +9,13 @@ This is the main python folder for this repository. Here I will add the majority
     can be played by downloading the file and opening it in a code editor. 
     
     If you would like to see the algorithm and 
-    thought process you can go to the logic folder in the same repository or click here.
+    thought process you can go to the logic folder in the same repository or 
+    click here.
 
-    [Logic_1](https://github.com/romanrocks4/dae_6_month/tree/main/logic_1)
+[Logic_1](https://github.com/romanrocks4/dae_6_month/tree/main/logic_1)
 
 ### I am currently working on 
 
     1. A discord chat bot with AI capabilities. 
-    I will be adding to this folder as I work on the bot. There are currently 0 files added. 
+    I will be adding to this folder as I work on the bot.
+     There are currently 0 files added. 
