@@ -1,0 +1,104 @@
+romanshubin@Romans-MacBook-Air ~ % ls 
+Applications	Documents	Library		Music		My website	Public		unity stuff
+Desktop		Downloads	Movies		My project	Pictures	get-pip.py
+romanshubin@Romans-MacBook-Air ~ % ls -l
+total 5160
+drwx------@   6 romanshubin  staff      192 Jun 14 11:42 Applications
+drwx------@  44 romanshubin  staff     1408 Jun 18 12:13 Desktop
+drwx------@  35 romanshubin  staff     1120 Jun 18 12:13 Documents
+drwx------@  33 romanshubin  staff     1056 Jun 17 14:38 Downloads
+drwx------@ 101 romanshubin  staff     3232 Sep 16  2024 Library
+drwx------    9 romanshubin  staff      288 Mar 21 22:20 Movies
+drwx------+   6 romanshubin  staff      192 Feb 14  2024 Music
+drwxr-xr-x@  12 romanshubin  staff      384 Mar 10 21:17 My project
+-rw-r--r--    1 romanshubin  staff       11 Feb 15  2024 My website
+drwx------+   4 romanshubin  staff      128 Feb 11  2024 Pictures
+drwxr-xr-x+   4 romanshubin  staff      128 Feb 11  2024 Public
+-rw-r--r--    1 romanshubin  staff  2635835 May 14  2024 get-pip.py
+drwxr-xr-x    2 romanshubin  staff       64 Sep 17  2024 unity stuff
+romanshubin@Romans-MacBook-Air ~ % ls -l Desktop      
+total 19208
+-rw-r--r--@ 1 romanshubin  staff  1448615 Feb 29  2024 Screenshot 2024-02-29 at 10.49.28 PM.png
+-rw-r--r--@ 1 romanshubin  staff   466425 Mar  2  2024 Screenshot 2024-03-02 at 2.07.25 PM.png
+-rw-r--r--@ 1 romanshubin  staff  1892885 Mar 19  2024 Screenshot 2024-03-19 at 11.40.38 PM.png
+-rw-r--r--@ 1 romanshubin  staff  3413639 Aug 16  2024 Screenshot 2024-08-16 at 9.26.54 PM.png
+-rw-r--r--@ 1 romanshubin  staff  3583210 Nov 22  2024 Screenshot 2024-11-22 at 2.45.44 PM.png
+-rw-r--r--@ 1 romanshubin  staff   949247 Dec  5  2024 Screenshot 2024-12-05 at 11.06.31 PM.png
+-rw-r--r--@ 1 romanshubin  staff  2449802 Dec  5  2024 Screenshot 2024-12-05 at 11.18.03 PM.png
+-rw-r--r--@ 1 romanshubin  staff  4608578 Dec  5  2024 Screenshot 2024-12-05 at 11.18.18 PM.png
+-rw-r--r--@ 1 romanshubin  staff  2064650 Dec  6  2024 Screenshot 2024-12-06 at 1.02.07 AM.png
+-rw-r--r--@ 1 romanshubin  staff  2413407 Dec  6  2024 Screenshot 2024-12-06 at 12.09.15 AM.png
+-rw-r--r--@ 1 romanshubin  staff  2158368 Dec  8  2024 Screenshot 2024-12-08 at 11.13.51 PM.png
+-rw-r--r--@ 1 romanshubin  staff  4641368 Jan 31 17:06 Screenshot 2025-01-31 at 5.06.47 PM.png
+-rw-r--r--@ 1 romanshubin  staff  2970676 Jan 31 20:32 Screenshot 2025-01-31 at 8.32.19 PM.png
+-rw-r--r--@ 1 romanshubin  staff   618047 Jan 31 21:10 Screenshot 2025-01-31 at 9.09.57 PM.png
+-rw-r--r--@ 1 romanshubin  staff   969045 Jan 31 21:10 Screenshot 2025-01-31 at 9.10.07 PM.png
+-rw-r--r--@ 1 romanshubin  staff  1788442 Feb 16 14:01 Screenshot 2025-02-16 at 2.01.39 PM.png
+-rw-r--r--@ 1 romanshubin  staff   545865 Feb 17 00:26 Screenshot 2025-02-17 at 12.26.23 AM.png
+-rw-r--r--@ 1 romanshubin  staff  1689689 Feb 26 19:52 Screenshot 2025-02-26 at 7.51.58 PM.png
+-rw-r--r--@ 1 romanshubin  staff  2082695 Feb 27 10:52 Screenshot 2025-02-27 at 10.51.55 AM.png
+-rw-r--r--@ 1 romanshubin  staff  3009154 Feb 27 11:33 Screenshot 2025-02-27 at 11.33.39 AM.png
+-rw-r--r--@ 1 romanshubin  staff   302131 Apr 13 23:53 Screenshot 2025-04-13 at 11.52.54 PM.png
+-rw-r--r--@ 1 romanshubin  staff  5477737 Apr 13 12:41 Screenshot 2025-04-13 at 12.41.56 PM.png
+-rw-r--r--@ 1 romanshubin  staff  3549879 Apr 14 10:37 Screenshot 2025-04-14 at 10.37.48 AM.png
+-rw-r--r--@ 1 romanshubin  staff  3217658 Apr 14 10:38 Screenshot 2025-04-14 at 10.38.06 AM.png
+-rw-r--r--@ 1 romanshubin  staff  8336282 Apr 24 23:10 Screenshot 2025-04-24 at 11.10.27 PM.png
+-rw-r--r--@ 1 romanshubin  staff   591966 May  1 20:46 Screenshot 2025-05-01 at 8.46.11 PM.png
+-rw-r--r--@ 1 romanshubin  staff  4391236 May 12 02:15 Screenshot 2025-05-12 at 2.15.30 AM.png
+-rw-r--r--@ 1 romanshubin  staff  4480903 May 12 19:58 Screenshot 2025-05-12 at 7.58.44 PM.png
+-rw-r--r--@ 1 romanshubin  staff  3952405 May 13 19:57 Screenshot 2025-05-13 at 7.57.01 PM.png
+-rw-r--r--@ 1 romanshubin  staff  3985360 May 13 19:57 Screenshot 2025-05-13 at 7.57.05 PM 1.png
+-rw-r--r--@ 1 romanshubin  staff  3985587 May 13 19:57 Screenshot 2025-05-13 at 7.57.05 PM.png
+-rw-r--r--@ 1 romanshubin  staff  3998608 May 13 19:57 Screenshot 2025-05-13 at 7.57.06 PM.png
+-rw-r--r--@ 1 romanshubin  staff   591132 Jun  5 11:31 Screenshot 2025-06-05 at 11.31.08 AM.png
+-rw-r--r--@ 1 romanshubin  staff  2035102 Jun 10 23:17 Screenshot 2025-06-10 at 11.17.04 PM.png
+-rw-r--r--@ 1 romanshubin  staff  2058170 Jun 10 23:17 Screenshot 2025-06-10 at 11.17.18 PM.png
+-rw-r--r--@ 1 romanshubin  staff  2077767 Jun 10 23:17 Screenshot 2025-06-10 at 11.17.19 PM 1.png
+-rw-r--r--@ 1 romanshubin  staff  2078242 Jun 10 23:17 Screenshot 2025-06-10 at 11.17.19 PM.png
+-rw-r--r--@ 1 romanshubin  staff  2107915 Jun 10 23:17 Screenshot 2025-06-10 at 11.17.20 PM.png
+-rw-r--r--@ 1 romanshubin  staff     1883 Feb  1 19:49 medievaltrader.png
+-rw-r--r--@ 1 romanshubin  staff     1220 Feb  1 19:50 windowssuit.png
+romanshubin@Romans-MacBook-Air ~ % cd Desktop      
+romanshubin@Romans-MacBook-Air Desktop % chmod +x 
+Screenshot\ 2024-02-29\ at\ 10.49.28 PM.png
+Screenshot\ 2024-03-02\ at\ 2.07.25 PM.png
+Screenshot\ 2024-03-19\ at\ 11.40.38 PM.png
+Screenshot\ 2024-08-16\ at\ 9.26.54 PM.png
+Screenshot\ 2024-11-22\ at\ 2.45.44 PM.png
+Screenshot\ 2024-12-05\ at\ 11.06.31 PM.png
+Screenshot\ 2024-12-05\ at\ 11.18.03 PM.png
+Screenshot\ 2024-12-05\ at\ 11.18.18 PM.png
+Screenshot\ 2024-12-06\ at\ 1.02.07 AM.png
+Screenshot\ 2024-12-06\ at\ 12.09.15 AM.png
+Screenshot\ 2024-12-08\ at\ 11.13.51 PM.png
+Screenshot\ 2025-01-31\ at\ 5.06.47 PM.png
+Screenshot\ 2025-01-31\ at\ 8.32.19 PM.png
+Screenshot\ 2025-01-31\ at\ 9.09.57 PM.png
+Screenshot\ 2025-01-31\ at\ 9.10.07 PM.png
+Screenshot\ 2025-02-16\ at\ 2.01.39 PM.png
+Screenshot\ 2025-02-17\ at\ 12.26.23 AM.png
+Screenshot\ 2025-02-26\ at\ 7.51.58 PM.png
+Screenshot\ 2025-02-27\ at\ 10.51.55 AM.png
+Screenshot\ 2025-02-27\ at\ 11.33.39 AM.png
+Screenshot\ 2025-04-13\ at\ 11.52.54 PM.png
+Screenshot\ 2025-04-13\ at\ 12.41.56 PM.png
+Screenshot\ 2025-04-14\ at\ 10.37.48 AM.png
+Screenshot\ 2025-04-14\ at\ 10.38.06 AM.png
+Screenshot\ 2025-04-24\ at\ 11.10.27 PM.png
+Screenshot\ 2025-05-01\ at\ 8.46.11 PM.png
+Screenshot\ 2025-05-12\ at\ 2.15.30 AM.png
+Screenshot\ 2025-05-12\ at\ 7.58.44 PM.png
+Screenshot\ 2025-05-13\ at\ 7.57.01 PM.png
+Screenshot\ 2025-05-13\ at\ 7.57.05 PM\ 1.png
+Screenshot\ 2025-05-13\ at\ 7.57.05 PM.png
+Screenshot\ 2025-05-13\ at\ 7.57.06 PM.png
+Screenshot\ 2025-06-05\ at\ 11.31.08 AM.png
+Screenshot\ 2025-06-10\ at\ 11.17.04 PM.png
+Screenshot\ 2025-06-10\ at\ 11.17.18 PM.png
+Screenshot\ 2025-06-10\ at\ 11.17.19 PM\ 1.png
+Screenshot\ 2025-06-10\ at\ 11.17.19 PM.png
+Screenshot\ 2025-06-10\ at\ 11.17.20 PM.png
+medievaltrader.png
+windowssuit.png
+romanshubin@Romans-MacBook-Air Desktop % chmod +x Screenshot\ 2024-02-29\ at\ 10.49.28 PM.png
+romanshubin@Romans-MacBook-Air Desktop %
