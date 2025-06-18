@@ -22,3 +22,5 @@ This is my unix 1 folder that contains a .txt file showing my unix abilities. Th
 
 9. chmod: Edits the permissions of a file.
 
+10. &&: lets you combine two commands and execute them simultaneously.
+
