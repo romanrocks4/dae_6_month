@@ -18,4 +18,3 @@ This is the main python folder for this repository. Here I will add the majority
 
     1. A discord chat bot with AI capabilities. 
     I will be adding to this folder as I work on the bot.
-     There are currently 0 files added. 
