@@ -17,9 +17,7 @@ This is the main python folder for this repository. Here I will add the majority
 ### I am currently working on 
 
     1. A discord chat bot with AI capabilities. 
-<<<<<<< HEAD
-    I will be adding to this folder as I work on the bot.
-=======
+
     I will be adding to this folder as I work on the bot.
      There are currently 0 files added. 
 
@@ -30,5 +28,3 @@ This is the main python folder for this repository. Here I will add the majority
     For the AI capabilities, I will use LM studio and run a local LLM for the bot so I can use my own API key.
     The project will take two weeks of coding and troubleshooting with a designated schedule for each day and week.
     I have created an   algorithm, flowchart, and schedule to keep me on track and organized.    
-
->>>>>>> 29e9ac1761c979d1e58a118a72efbc280fd20a67
