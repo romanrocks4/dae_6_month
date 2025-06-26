@@ -18,6 +18,9 @@ intents.message_content = True
 # Create bot with command prefix and intents
 bot = commands.Bot(command_prefix='!', intents=intents)
 
+# Stores each user chat session
+user_chats = {}
+
 # Alert the user when the bot is ready on the terminal
 @bot.event
 async def on_ready():
@@ -29,6 +32,15 @@ async def send_dice(ctx):
     dice = random.randint(1,6)
     await ctx.send(f'You rolled a {dice} !')
 
+@bot.command(name='reset' ,help='Resets the AI memory')
+async def reset_memory(ctx):
+    user_id = ctx.author.id
+    if user_id in user_chats:
+        del user_chats[user_id]
+        await ctx.send("Your memory has been reset.")
+    else:
+        await ctx.send("You don't have an active memory to reset.")
+
 @bot.event
 async def on_message(message):
     if message.author == bot.user:
@@ -39,22 +51,29 @@ async def on_message(message):
         await bot.process_commands(message)
         return
     
+    # Unique user ID
+    user_id = message.author.id
+
      #  Store the message in a variable
     contents = message.content
 
-    # gives the api key to 
-    client = genai.Client(api_key = api_key)
+    # Only create chat once per user
+    if user_id not in user_chats:
+        client = genai.Client(api_key=api_key)
+        user_chats[user_id] = client.chats.create(model="gemini-2.5-flash")
 
-    response = client.models.generate_content(
-    model="gemini-2.0-flash",
-    contents= message.content,
-)
+    chat = user_chats[user_id]
 
-    if message.content.lower():
-        await message.channel.send(response.text)
+    try:
+        response = chat.send_message(message.content)
+        # Sends the response to the user
+        if message.content.lower():
+            await message.channel.send(response.text)
+    except Exception as e: 
+         print(f"Gemini error: {e}")
+         await message.channel.send(" Gemini is currently overloaded.")
 
     await bot.process_commands(message)  # IMPORTANT if you're using commands
-
 
 # Start the bot
 bot.run(TOKEN)
