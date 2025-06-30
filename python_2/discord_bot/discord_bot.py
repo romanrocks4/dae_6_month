@@ -1,4 +1,4 @@
-# Import the libraries
+# Imports the libraries.
 from google import genai
 import discord
 from discord.ext import commands
@@ -6,32 +6,34 @@ import os
 from dotenv import load_dotenv
 import random
 
-# Load the .env file with the Discord token and AI api key
+"""Loads the .env file with the Discord token and AI api key."""
 load_dotenv()
 TOKEN = os.getenv("DISCORD_TOKEN")
 api_key = os.getenv("apikey")
 
-# Setup intents
+"""This sets up the intents. Giving the bot access to only messages in the server."""
 intents = discord.Intents.default()
 intents.message_content = True
 
-# Create bot with command prefix and intents
+"""Create a bot with command prefix and intents."""
 bot = commands.Bot(command_prefix='!', intents=intents)
 
-# Stores each user chat session
+# stores the users info.
 user_chats = {}
 
-# Alert the user when the bot is ready on the terminal
+"""Alerts the user when the bot is ready  and sends a message on the terminal."""
 @bot.event
 async def on_ready():
     print(f'{bot.user} has connected to Discord!')
 
-# Roll the dice and send it to the user
+""""This is a command that takes a random number 1 through 6 and sends it to the user, imitating a dice roll."""
 @bot.command(name='dice' ,help='Rolls a die 1 through six when you say !dice')
 async def send_dice(ctx):
     dice = random.randint(1,6)
     await ctx.send(f'You rolled a {dice} !')
 
+"""This command takes the id of the user that sent the command and matches it 
+to a user id and chat in the saved chats. It then deletes it, reseting the bot's memory."""
 @bot.command(name='reset' ,help='Resets the AI memory')
 async def reset_memory(ctx):
     user_id = ctx.author.id
@@ -41,39 +43,44 @@ async def reset_memory(ctx):
     else:
         await ctx.send("You don't have an active memory to reset.")
 
+"""This is the main function that takes the users message, 
+gives it as a prompt to Gemini, and sends the response back."""
 @bot.event
 async def on_message(message):
     if message.author == bot.user:
-        return  # Prevent the bot from replying to itself
+        return  # Prevents the bot from replying to itself.
     
-    # Ignore if the message starts with the command prefix
+    # Ignore if the message starts with the command prefix.
     if message.content.startswith(bot.command_prefix):
         await bot.process_commands(message)
         return
     
-    # Unique user ID
+    # Gets the unique user ID.
     user_id = message.author.id
 
-     #  Store the message in a variable
+     # Stores the users message in a variable.
     contents = message.content
 
-    # Only create chat once per user
+    """This statment checks the user_chats dictionary for the user id and 
+    creates a new chat if the user is new. This is what gives the bot memory of previous prompts."""
     if user_id not in user_chats:
         client = genai.Client(api_key=api_key)
         user_chats[user_id] = client.chats.create(model="gemini-2.5-flash")
-
+        print(user_chats)
     chat = user_chats[user_id]
 
+    """ This statment takes the response from Gemini and sends it to the user.
+    It also catches any errors and alerts the user."""
     try:
         response = chat.send_message(message.content)
-        # Sends the response to the user
+        # Sends the response to the user.
         if message.content.lower():
             await message.channel.send(response.text)
     except Exception as e: 
          print(f"Gemini error: {e}")
          await message.channel.send(" Gemini is currently overloaded.")
 
-    await bot.process_commands(message)  # IMPORTANT if you're using commands
+    await bot.process_commands(message)
 
-# Start the bot
+# Starts the bot.
 bot.run(TOKEN)
