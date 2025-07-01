@@ -1,0 +1,73 @@
+Last login: Tue Jul  1 13:24:47 on ttys063
+romanshubin@Romans-MacBook-Air ~ % cd Documents 
+romanshubin@Romans-MacBook-Air Documents % cd dae_6_month 
+romanshubin@Romans-MacBook-Air dae_6_month % ls
+README.md		python_2		version_control_1
+logic_1			unix_1
+romanshubin@Romans-MacBook-Air dae_6_month % cp version_control_1/placeholder.txt unix_2   
+romanshubin@Romans-MacBook-Air dae_6_month % less unix_2/placeholder.txt 
+romanshubin@Romans-MacBook-Air dae_6_month % cd unix_2 
+romanshubin@Romans-MacBook-Air unix_2 % mv placeholder.txt placeholder2.txt                                                                            
+romanshubin@Romans-MacBook-Air unix_2 % cd .
+romanshubin@Romans-MacBook-Air unix_2 % cd ..                                                                                   
+romanshubin@Romans-MacBook-Air dae_6_month % mkdir test_folder
+romanshubin@Romans-MacBook-Air dae_6_month % rm test_folder       
+rm: test_folder: is a directory
+romanshubin@Romans-MacBook-Air dae_6_month % rmdir test_folder 
+romanshubin@Romans-MacBook-Air dae_6_month % cp version_control_1/placeholder.txt unix_1/filename.txt unix_2   
+romanshubin@Romans-MacBook-Air dae_6_month % cd unix_2
+romanshubin@Romans-MacBook-Air unix_2 % rm filename.txt placeholder.txt 
+romanshubin@Romans-MacBook-Air unix_2 % ls
+placeholder2.txt
+romanshubin@Romans-MacBook-Air unix_2 % cd ..
+romanshubin@Romans-MacBook-Air dae_6_month % ls
+README.md		logic_1			python_2		unix_1			unix_2			version_control_1
+romanshubin@Romans-MacBook-Air dae_6_month % ls --width=80
+ls: unrecognized option `--width=80'
+usage: ls [-@ABCFGHILOPRSTUWabcdefghiklmnopqrstuvwxy1%,] [--color=when] [-D format] [file ...]
+romanshubin@Romans-MacBook-Air dae_6_month % cd unix_2
+romanshubin@Romans-MacBook-Air unix_2 % head -n 5 placeholder2.txt 
+This is a placeholder file.%                                                                                                                           romanshubin@Romans-MacBook-Air unix_2 % echo $SHELL
+/bin/zsh
+romanshubin@Romans-MacBook-Air unix_2 % ps -p $$
+  PID TTY           TIME CMD
+92291 ttys063    0:00.24 -zsh
+romanshubin@Romans-MacBook-Air unix_2 % bash
+
+The default interactive shell is now zsh.
+To update your account to use zsh, please run `chsh -s /bin/zsh`.
+For more details, please visit https://support.apple.com/kb/HT208050.
+bash-3.2$ cat /etc/shells
+# List of acceptable shells for chpass(1).
+# Ftpd will not allow users to connect who are not using
+# one of these shells.
+
+/bin/bash
+/bin/csh
+/bin/dash
+/bin/ksh
+/bin/sh
+/bin/tcsh
+/bin/zsh
+bash-3.2$ /bin/zsh
+romanshubin@Romans-MacBook-Air unix_2 % bash
+
+The default interactive shell is now zsh.
+To update your account to use zsh, please run `chsh -s /bin/zsh`.
+For more details, please visit https://support.apple.com/kb/HT208050.
+bash-3.2$ zsh
+romanshubin@Romans-MacBook-Air unix_2 % bash
+
+The default interactive shell is now zsh.
+To update your account to use zsh, please run `chsh -s /bin/zsh`.
+For more details, please visit https://support.apple.com/kb/HT208050.
+bash-3.2$ zsh
+romanshubin@Romans-MacBook-Air unix_2 % alias ll='ls -l'
+romanshubin@Romans-MacBook-Air unix_2 % ll
+total 8
+-rw-r--r--@ 1 romanshubin  staff  30 Jul  1 13:26 placeholder2.txt
+romanshubin@Romans-MacBook-Air unix_2 % export PS1="%F{blue}%n@%m %1~ %#%f "
+romanshubin@Romans-MacBook-Air unix_2 % export PS1="%F{cyan}%n@%m %1~ %#%f "
+romanshubin@Romans-MacBook-Air unix_2 % nano ~/.zshrc
+romanshubin@Romans-MacBook-Air unix_2 % 
+
