@@ -5,6 +5,7 @@ from discord.ext import commands
 import os
 from dotenv import load_dotenv
 import random
+import asyncio
 
 """Loads the .env file with the Discord token and AI api key."""
 load_dotenv()
@@ -16,7 +17,7 @@ intents = discord.Intents.default()
 intents.message_content = True
 
 """Create a bot with command prefix and intents."""
-bot = commands.Bot(command_prefix='!', intents=intents)
+bot = commands.Bot(command_prefix='/', intents=intents)
 
 # stores the users info.
 user_chats = {}
@@ -32,14 +33,36 @@ async def send_dice(ctx):
     dice = random.randint(1,6)
     await ctx.send(f'You rolled a {dice} !')
 
+@bot.command(name='prompt', help='Changes the system prompt')
+async def prompt(ctx, *, prompt):
+    user_id = ctx.author.id
+
+    if user_id in user_chats:
+        chat = user_chats[user_id]
+        def send_blocking():
+            prompt = ("")
+            return chat.send_message(f"System: {prompt}")
+        print(prompt)
+
+        try:
+            response = await asyncio.to_thread(send_blocking)
+            await ctx.send("The System prompt has been changed.")
+        except Exception as e:
+            print(f"Gemini error: {e}")
+            await ctx.send("Failed to send system prompt.")
+    else:
+        await ctx.send("No active chat found. Please send a message first to start a session.")
+
 """This command takes the id of the user that sent the command and matches it 
 to a user id and chat in the saved chats. It then deletes it, reseting the bot's memory."""
 @bot.command(name='reset' ,help='Resets the AI memory')
 async def reset_memory(ctx):
+
     user_id = ctx.author.id
     if user_id in user_chats:
         del user_chats[user_id]
         await ctx.send("Your memory has been reset.")
+
     else:
         await ctx.send("You don't have an active memory to reset.")
 
@@ -66,16 +89,25 @@ async def on_message(message):
     if user_id not in user_chats:
         client = genai.Client(api_key=api_key)
         user_chats[user_id] = client.chats.create(model="gemini-2.5-flash")
-        print(user_chats)
-    chat = user_chats[user_id]
+        print("User id and Gemini chat id:", user_chats)
 
+    chat = user_chats[user_id]
+    
     """ This statment takes the response from Gemini and sends it to the user.
     It also catches any errors and alerts the user."""
+
+    # Sets the max characters for each message.
+    MAX_CHARS = 2000
+    # Sends the response to the user.
     try:
         response = chat.send_message(message.content)
-        # Sends the response to the user.
-        if message.content.lower():
-            await message.channel.send(response.text)
+        text = response.text
+
+        # Sends the response in chunks of 2000 characters.
+        for i in range(0, len(text), MAX_CHARS):
+            await message.channel.send(text[i:i+MAX_CHARS])
+
+        # Catches any errors.
     except Exception as e: 
          print(f"Gemini error: {e}")
          await message.channel.send(" Gemini is currently overloaded.")
