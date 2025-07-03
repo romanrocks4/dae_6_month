@@ -30,6 +30,16 @@ user_responses = {}
 async def on_ready():
     print(f'{bot.user} has connected to Discord!')
 
+"""This event catches any mispelling or incorrect commands and sends a message to the user."""
+@bot.event
+async def on_command_error(ctx, error):
+    if isinstance(error, commands.CommandNotFound):
+        await ctx.send(" That command doesn't exist. Maybe you meant something else or mispelled it? (You can use the /help command to see all available commands)")
+    else:
+        # Let other errors raise as normal so you can still debug them
+        raise error
+
+
 """"This is a command that takes a random number 1 through 6 and sends it to the user, imitating a dice roll."""
 @bot.command(name='dice' ,help='Rolls a die 1 through six when you say !dice')
 async def send_dice(ctx):
@@ -59,7 +69,12 @@ async def print_chat(ctx):
         await ctx.send("You haven't received a response yet.")
 
 @bot.command(name='prompt', help='Changes the system prompt')
-async def prompt(ctx, *, prompt):
+async def prompt(ctx, *, prompt=None):
+
+    if prompt is None:
+        await ctx.send("⚠️ You must provide a prompt. Example: `/prompt you are a helpful assistant.`")
+        return
+
     user_id = ctx.author.id
 
     if user_id in user_chats:
@@ -111,13 +126,13 @@ async def on_message(message):
     """This statment checks the user_chats dictionary for the user id and 
     creates a new chat if the user is new. This is what gives the bot memory of previous prompts."""
     if user_id not in user_chats:
-        
+
         client = genai.Client(api_key=api_key)
         user_chats[user_id] = client.chats.create(model="gemini-2.5-flash")
         list_dict = list(user_chats.items())
         print("User id and Gemini chat id:", user_chats)
         num_items = len(list_dict)
-        print(num_items)
+        print("Number of open chats:",num_items)
 
     chat = user_chats[user_id]
     
