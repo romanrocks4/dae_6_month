@@ -65,9 +65,8 @@ async def prompt(ctx, *, prompt):
     if user_id in user_chats:
         chat = user_chats[user_id]
         def send_blocking():
-            prompt = ("")
+
             return chat.send_message(f"System: {prompt}")
-        print(prompt)
 
         try:
             response = await asyncio.to_thread(send_blocking)
@@ -77,7 +76,7 @@ async def prompt(ctx, *, prompt):
             await ctx.send("Failed to send system prompt.")
     else:
         await ctx.send("No active chat found. Please send a message first to start a session.")
-
+   
 """This command takes the id of the user that sent the command and matches it 
 to a user id and chat in the saved chats. It then deletes it, reseting the bot's memory."""
 @bot.command(name='reset' ,help='Resets the AI memory')
@@ -112,6 +111,7 @@ async def on_message(message):
     """This statment checks the user_chats dictionary for the user id and 
     creates a new chat if the user is new. This is what gives the bot memory of previous prompts."""
     if user_id not in user_chats:
+        
         client = genai.Client(api_key=api_key)
         user_chats[user_id] = client.chats.create(model="gemini-2.5-flash")
         list_dict = list(user_chats.items())
