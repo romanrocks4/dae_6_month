@@ -22,6 +22,9 @@ bot = commands.Bot(command_prefix='/', intents=intents)
 # stores the users info.
 user_chats = {}
 
+# Keeps track of last Gemini response per user
+user_responses = {} 
+
 """Alerts the user when the bot is ready  and sends a message on the terminal."""
 @bot.event
 async def on_ready():
@@ -32,6 +35,28 @@ async def on_ready():
 async def send_dice(ctx):
     dice = random.randint(1,6)
     await ctx.send(f'You rolled a {dice} !')
+
+"""This command takes the last response from Gemini, saves it to a txt file,
+ and sends it through discord for the user to save."""
+@bot.command(name="print", help="Prints the last prompt Gemini gave to you into a txt file.")
+async def print_chat(ctx):
+
+    user_id = ctx.author.id
+
+    if user_id in user_responses:
+        response_text = user_responses[user_id]
+
+        filename = f"response_{user_id}.txt"
+        with open(filename, "w", encoding="utf-8") as file:
+            file.write(response_text)
+
+        # Send the file to the Discord channel
+        await ctx.send(file=discord.File(filename))
+
+        # Optional: delete the file after sending
+        os.remove(filename)
+    else:
+        await ctx.send("You haven't received a response yet.")
 
 @bot.command(name='prompt', help='Changes the system prompt')
 async def prompt(ctx, *, prompt):
@@ -89,7 +114,10 @@ async def on_message(message):
     if user_id not in user_chats:
         client = genai.Client(api_key=api_key)
         user_chats[user_id] = client.chats.create(model="gemini-2.5-flash")
+        list_dict = list(user_chats.items())
         print("User id and Gemini chat id:", user_chats)
+        num_items = len(list_dict)
+        print(num_items)
 
     chat = user_chats[user_id]
     
@@ -103,9 +131,12 @@ async def on_message(message):
         response = chat.send_message(message.content)
         text = response.text
 
+          # Save the latest response
+        user_responses[user_id] = text
+
         # Sends the response in chunks of 2000 characters.
-        for i in range(0, len(text), MAX_CHARS):
-            await message.channel.send(text[i:i+MAX_CHARS])
+        for index in range(0, len(text), MAX_CHARS):
+            await message.channel.send(text[index:index+MAX_CHARS])
 
         # Catches any errors.
     except Exception as e: 
