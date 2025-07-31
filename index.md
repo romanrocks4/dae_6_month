@@ -3,16 +3,19 @@ layout: default
 title: Roman Shubin
 ---
 
-Roman is a software developer currently learning cybersecurity in the penetration testing field. With experience in web development, IOT, and design he has tried all fields of tech. Currently he is working on an all in one CLI pentesting tool. You can see his skills and Github below.
-
 <div style="margin-top: 20px;">
-  <a href="https://github.com/romanrocks4" style="display: inline-block; margin-right: 15px; padding: 10px 20px; border: 1px solid #ffffff50; border-radius: 6px; color: white; text-decoration: none; background-color: #0366d6;">
-    GitHub Profile
+  <a href="https://github.com/romanrocks4" style="display: inline-block; margin-right: 15px; padding: 10px 20px; border: 1px solid #ffffff50; border-radius: 6px; color: white; text-decoration: none; background-color: #148474;">
+  Profile
   </a>
-  <a href="https://github.com/romanrocks4/dae_6_month/blob/main/semester_2/DAE%20Resume.pdf" style="display: inline-block; padding: 10px 20px; border: 1px solid #ffffff50; border-radius: 6px; color: white; text-decoration: none; background-color: #0366d6;">
-    View Resume
+  <a href="https://github.com/romanrocks4/dae_6_month/blob/main/semester_2/DAE%20Resume.pdf" style="display: inline-block; padding: 10px 20px; border: 1px solid #ffffff50; border-radius: 6px; color: white; text-decoration: none; background-color: #148474;">
+  Resume
+  </a>
+  <a href="https://www.linkedin.com/in/roman-shubin-0a0a48300/" style="display: inline-block; padding: 10px 20px; border: 1px solid #ffffff50; border-radius: 6px; color: white; text-decoration: none; background-color: #148474;">
+  Linkedin
   </a>
 </div>
+
+Roman is a software developer currently learning cybersecurity in the penetration testing field. With experience in web development, IOT, and design he has tried all fields of tech. Currently he is working on an all in one CLI pentesting tool. You can see his skills and Github below.
 
 ---
 
