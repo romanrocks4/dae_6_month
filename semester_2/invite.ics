@@ -1,0 +1,80 @@
+BEGIN:VCALENDAR
+METHOD:REQUEST
+PRODID:Microsoft Exchange Server 2010
+VERSION:2.0
+BEGIN:VTIMEZONE
+TZID:Eastern Standard Time
+BEGIN:STANDARD
+DTSTART:16010101T020000
+TZOFFSETFROM:-0400
+TZOFFSETTO:-0500
+RRULE:FREQ=YEARLY;INTERVAL=1;BYDAY=1SU;BYMONTH=11
+END:STANDARD
+BEGIN:DAYLIGHT
+DTSTART:16010101T020000
+TZOFFSETFROM:-0500
+TZOFFSETTO:-0400
+RRULE:FREQ=YEARLY;INTERVAL=1;BYDAY=2SU;BYMONTH=3
+END:DAYLIGHT
+END:VTIMEZONE
+BEGIN:VEVENT
+ORGANIZER;CN=New Student Advising Appointment:mailto:NewStudentAdvisingAppo
+ intment@ctregents.onmicrosoft.com
+ATTENDEE;ROLE=REQ-PARTICIPANT;PARTSTAT=NEEDS-ACTION;RSVP=FALSE;CN=Roman Shu
+ bin:mailto:roman.shubin27@gmail.com
+DESCRIPTION;LANGUAGE=en-US:Your appointment will be with Cruz\, Chrystie.\n
+ \nNew\, Readmit & Transfer In Student Advising Appointment\nAdvising Suite
+  L112\n203-332-5097\nhttps://ctstate.edu/academic-advising\n\nManage Booki
+ ng<https://outlook.office365.com/owa/calendar/NewStudentAdvisingAppointmen
+ t@ctregents.onmicrosoft.com/bookings/4kKNEQ8z6kWOvxath8JoKQ2>\n\nAdditiona
+ l Information\n-------------------------------------\nThank you for bookin
+ g an Advising appointment with me! I look forward to speaking with you.\n\
+ nBefore our meeting\, if you have not done so already\, please fill out ou
+ r brief Holistic Advising Questionnaire. This will  help us get a better i
+ dea of your academic and career plans. You will be asked to log in using y
+ our Net ID and password:\n\nHolistic Academic Questionnaire<https://forms.
+ office.com/r/xnJ1k47W7r>\n\nAdditionally\, we encourage you to complete th
+ e online orientation below:\n\nNew Student Online Orientation<http://www.g
+ o2orientation.com/ct>\n
+UID:040000008200E00074C5B7101A82E00800000000B19784584F01DC01000000000000000
+ 0100000008FC103D2E1CDF44F9FB9F7E81A81FFC2
+SUMMARY;LANGUAGE=en-US:Virtual/Video Appointment (Monday through Friday) - 
+ Roman Shubin
+DTSTART;TZID=Eastern Standard Time:20250801T093000
+DTEND;TZID=Eastern Standard Time:20250801T100000
+CLASS:PUBLIC
+PRIORITY:5
+DTSTAMP:20250730T124202Z
+TRANSP:OPAQUE
+STATUS:CONFIRMED
+SEQUENCE:1
+LOCATION;LANGUAGE=en-US:
+X-MICROSOFT-CDO-APPT-SEQUENCE:1
+X-MICROSOFT-CDO-OWNERAPPTID:2123887164
+X-MICROSOFT-CDO-BUSYSTATUS:TENTATIVE
+X-MICROSOFT-CDO-INTENDEDSTATUS:BUSY
+X-MICROSOFT-CDO-ALLDAYEVENT:FALSE
+X-MICROSOFT-CDO-IMPORTANCE:1
+X-MICROSOFT-CDO-INSTTYPE:0
+X-MICROSOFT-DONOTFORWARDMEETING:FALSE
+X-MICROSOFT-DISALLOW-COUNTER:FALSE
+X-MICROSOFT-REQUESTEDATTENDANCEMODE:DEFAULT
+X-MICROSOFT-ISRESPONSEREQUESTED:FALSE
+X-MICROSOFT-LOCATIONSOURCE:None
+X-MICROSOFT-LATITUDE:0
+X-MICROSOFT-LONGITUDE:0
+X-MICROSOFT-ACCURACY:0
+X-MICROSOFT-ALTITUDE:0
+X-MICROSOFT-ALTITUDEACCURACY:0
+X-MICROSOFT-LOCATIONS:[{"DisplayName":""\,"LocationAnnotation":""\,"Locatio
+ nUri":""\,"Latitude":0.0\,"Longitude":0.0\,"Accuracy":0.0\,"Altitude":0.0\
+ ,"AltitudeAccuracy":0.0\,"LocationStreet":""\,"LocationCity":""\,"Location
+ State":""\,"LocationCountry":""\,"LocationPostalCode":""\,"LocationFullAdd
+ ress":""}]
+BEGIN:VALARM
+DESCRIPTION:REMINDER
+TRIGGER;RELATED=START:-PT15M
+ACTION:DISPLAY
+END:VALARM
+END:VEVENT
+END:VCALENDAR

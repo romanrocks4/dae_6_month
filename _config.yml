@@ -1,7 +1,3 @@
 title: "Roman Shubin"
 description: "Designer | Developer | Pentester"
-theme: jekyll-theme-cayman
-
-header_pages:
-  - index.md
-  - projects.md
+theme: jekyll-theme-cayma
