@@ -7,22 +7,6 @@ permalink: /resume/
 {% include brand.html %}
 {% include nav.html %}
 
-## Summary
-Security‑minded backend developer who ships reliable services and automation.
-
-## Skills
-- **Languages:** Python, Go, TypeScript
-- **Cloud:** AWS, Azure
-- **Security:** Threat modeling, IAM, OWASP ASVS, SAST/DAST
-- **DevOps:** Docker, Kubernetes, Terraform, GitHub Actions
-
-## Education
-Cybersecurity & Backend Development — **dae**  
-**Expected Graduation:** MONTH YEAR
-
-## Experience (examples)
-**Security Engineering Intern** — Acme Corp (Jun–Sep 2024)  
-- Built IaC guardrails with OPA; reduced drift and privilege creep  
-- Automated SBOM generation; reduced critical dependencies by 60%
+[View and download my resume here.](https://github.com/romanrocks4/dae_6_month/blob/main/semester_2/DAE_Resume.pdf)
 
 {% include footer-note.html %}

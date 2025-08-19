@@ -7,15 +7,14 @@ permalink: /about/
 {% include brand.html %}
 {% include nav.html %}
 
-I build secure, reliable backend services with **secure-by-default** principles.  
-My ideal team values mentorship, curiosity, and clear communication.
+I am passionate about building new ideas and pushing the limit of what we already know. I love collaborating with people and listening on what they have to bring to the table. Overall, I need valuable work that I can see in the real world.
 
 ## Career Aspirations
-- Role: **Security Engineer** or **Backend Developer**
-- Team: inclusive, collaborative, feedback‑friendly
-- Work: secure features, better CI/CD, developer tooling & automation
+- Role: **Penetration Tester**
+- Team: Determined, inventive, and collaborative.
+- Work: Developer tooling & automation
 
 ## Interests
-Threat modeling, incident response, API security.
+Network/Cloud security, AI integration, experimenting with new technologies
 
 {% include footer-note.html %}

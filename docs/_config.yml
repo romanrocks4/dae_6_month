@@ -1,7 +1,7 @@
-title: "YOUR NAME — Cybersecurity & Backend Developer"
-description: "Portfolio showcasing secure backend systems, automation, and case studies."
-url: "https://kakradetome.github.io"
-baseurl: "/Kay-s-3-Week-Dae-Projects" # must match repo name exactly
+title: "Roman Shubin — Cybersecurity"
+description: "Portfolio showcasing skills and interest in the cybersecurity field."
+url: "https://romanrocks4.github.io"
+baseurl: "/dae_6_month" # must match repo name exactly
 
 theme: jekyll-theme-cayman
 permalink: pretty

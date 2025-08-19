@@ -8,15 +8,15 @@ title: "Home"
 
 <img src="{{ '/assets/img/headshot.png' | relative_url }}" alt="Headshot of YOUR NAME" width="200" style="border-radius:50%;margin:6px 0 12px 0;" />
 
-# YOUR NAME
-**Cybersecurity & Backend Development**
+# Roman Shubin
+**Cybersecurity**
 
-**Looking for:** Junior Security Engineer / Backend Developer roles in collaborative, learning‑focused teams.  
-**Graduation:** MONTH YEAR
+**Looking for:** Penetration tester roles in collaborative, determined teams.  
+**Graduation:** November 2025
 
 ## Highlights
-- Python, Go, TypeScript
-- AWS, Docker, Kubernetes, Terraform
-- Threat modeling, IAM, OWASP ASVS, SAST/DAST
+- Python, JavaScript, HTML/CSS, C++, C#.
+- GitHub, Unix, React.
+- Prompt engineering, AI API integration.
 
 {% include footer-note.html %}

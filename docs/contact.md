@@ -7,8 +7,8 @@ permalink: /contact/
 {% include brand.html %}
 {% include nav.html %}
 
-- Email: [you@example.com](mailto:you@example.com)  
-- LinkedIn: [linkedin.com/in/YOUR-HANDLE](https://linkedin.com/in/YOUR-HANDLE)  
-- GitHub: [github.com/YOUR-USERNAME](https://github.com/YOUR-USERNAME)
+- Email: [roman.shubin27@gmail.com](mailto:roman.shubin27@gmail.com)  
+- LinkedIn: [linkedin.com](https://linkedin.com/in/roman-shubin-0a0a48300/)  
+- GitHub: [github.com](https://github.com/romanrocks4)
 
 {% include footer-note.html %}
