@@ -1,0 +1,7 @@
+# Nmap 7.94SVN scan initiated Tue Aug 26 17:36:32 2025 as: nmap -sU --top-ports 100 -T4 -oN udp_scan.txt 192.168.1.157
+Nmap scan report for 192.168.1.157
+Host is up (0.015s latency).
+All 100 scanned ports on 192.168.1.157 are in ignored states.
+Not shown: 100 open|filtered udp ports (no-response)
+
+# Nmap done at Tue Aug 26 17:36:53 2025 -- 1 IP address (1 host up) scanned in 20.53 seconds
