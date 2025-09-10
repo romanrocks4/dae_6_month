@@ -1,0 +1,21 @@
+[tool.poetry]
+name = "cli-tool"
+version = "0.1.0"
+description = "This is my cli pentesting tool."
+authors = ["Roman Shubin <roman.shubin27@gmail.com>"]
+readme = "README.md"
+packages = [{include = "cli_tool"}]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+click = "^8.2.1"
+theharvester = "^0.0.1"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+
+[tool.poetry.scripts]
+pentest = "cli_tool.pentest:cli"
