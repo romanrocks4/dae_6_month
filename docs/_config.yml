@@ -1,0 +1,17 @@
+title: "Roman Shubin — Cybersecurity"
+description: "Portfolio showcasing skills and interest in the cybersecurity field."
+url: "https://romanrocks4.github.io"
+baseurl: "/dae_6_month" # must match repo name exactly
+
+theme: jekyll-theme-cayman
+permalink: pretty
+
+# GitHub Pages-safe plugins
+plugins:
+    - jekyll-seo-tag
+    - jekyll-feed
+
+exclude:
+    - README.md
+    - Gemfile
+    - Gemfile.lock
