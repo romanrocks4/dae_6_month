@@ -1,53 +1,68 @@
-# ADR_1 
+# ADR_1 Decision to use Click for CLI Framework
 Date: 2025-09-10 - Decider: Roman Shubin
+
+**Status:** Accepted
 
 ---
 
-### Context and Problem Statement
+### Context
 
-[Describe the issue, problem, or context that requires a decision. Why is this ADR necessary? What constraints or forces are at play?]
+I am building an all in one Python CLI tool for penetration testing automation. For this, I need robust and reliable framework.
+The tool requires:
+- Nested commands
+- Argument parsing
+- Ease of maintenance
+- Community support and documentation
 
 ---
 
 ### Decision
 
-[What decision has been made? State it clearly and concisely.]
+I have decided to use **Click** as the proper framework for the project.
 
 ---
 
 ### Alternatives Considered
 
-[Option 1 — pros/cons]
+- **Typer**: Modern, type-safe, built on top of Click. 
+    * Pros: type hints, concise syntax. 
+    * Cons: newer, less established, adds dependency on Typer itself.  
 
-[Option 2 — pros/cons]
+- **argparse**: Built-in to Python. 
+    * Pros: no external dependencies. 
+    * Cons: verbose, less modern syntax, harder to maintain complex CLIs.  
 
-[Option 3 — pros/cons]
+- **docopt**: Declarative CLI definition. 
+    * Pros: minimal boilerplate. 
+    * Cons: less flexible, smaller community, harder for nested commands.
 
 ---
 
-### Rationale
-
-[Why was this decision chosen? Which factors made it the most appropriate?]
-
---- 
-
 ### Consequences
+
 Positive
 
-[List benefits]
+- Mature, stable, and widely used in the Python community  
+- Supports nested commands and complex argument parsing  
+- Extensive documentation and examples  
 
 Negative
 
-[List trade-offs, downsides, risks]
+- Slightly more verbose compared to newer frameworks like Typer  
+- No built-in type hint-based argument validation (requires manual type handling)  
+- Adds an external dependency to the project
 
 ---
 
 ### Implementation Plan
 
-[How will this be implemented? Tools, libraries, rollout steps, etc.]
+To implement the framework into my project I will be using Python 3.11+. I will also need the technical capabilities listed below.
+- Modular command structure (subcommands)
+- Support for arguments and options
+- Logging to file
 
 ---
 
-### Migration / Rollback
+## References
 
-[How do we migrate to this decision? How can we roll it back if it fails?]
+- [Click Documentation](https://click.palletsprojects.com/)
