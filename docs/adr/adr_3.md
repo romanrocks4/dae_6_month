@@ -1,53 +1,63 @@
-# ADR_3
-Date: 2025-09-10 - Decider: Roman Shubin
+# ADR_3 Decision on Tool Integration Strategy
+Date: 2025-09-17 - Decider: Roman Shubin
+
+**Status:** Accepted
 
 ---
 
-### Context and Problem Statement
+### Context
+The tool must orchestrate multiple external pentesting utilities (e.g., Nmap, sqlmap, Metasploit). Each has different integration options: some provide APIs or Python wrappers, others only expose CLI output. We need a consistent approach.
 
-[Describe the issue, problem, or context that requires a decision. Why is this ADR necessary? What constraints or forces are at play?]
+The tool requires:
+- Reliable execution of external tools
+- Structured, parseable results
+- Ability to support new tools with minimal effort
+- Error handling and timeouts
 
 ---
 
 ### Decision
-
-[What decision has been made? State it clearly and concisely.]
+I have decided to adopt a **Hybrid Integration Strategy**:  
+- Use APIs/SDKs where available (e.g., Nessus API, python-nmap, msfrpc).  
+- Use subprocess execution with JSON/XML parsing for tools without APIs.  
 
 ---
 
 ### Alternatives Considered
+- **Pure Subprocess Wrappers**  
+    * Pros: Works for any tool.  
+    * Cons: Fragile, parsing inconsistencies, harder error handling.  
 
-[Option 1 — pros/cons]
+- **Pure API/SDK Approach**  
+    * Pros: Structured data, stable integrations.  
+    * Cons: Limited availability across tools.  
 
-[Option 2 — pros/cons]
-
-[Option 3 — pros/cons]
+- **Service-Based (local daemons)**  
+    * Pros: Scalability, separation of concerns.  
+    * Cons: Adds orchestration complexity.  
 
 ---
 
-### Rationale
-
-[Why was this decision chosen? Which factors made it the most appropriate?]
-
---- 
-
 ### Consequences
 Positive
-
-[List benefits]
+- Robustness by leveraging APIs where possible  
+- Broad compatibility with CLI-only tools  
+- Easier error handling and consistent data schema  
 
 Negative
-
-[List trade-offs, downsides, risks]
+- Requires maintaining parsers for non-API tools  
+- Increased complexity in testing integration paths  
 
 ---
 
 ### Implementation Plan
-
-[How will this be implemented? Tools, libraries, rollout steps, etc.]
+- Build abstraction layer for all integrations  
+- Normalize outputs into a common JSON schema  
+- Enforce timeouts and logging on all subprocess calls  
+- Document how to add new tool integrations  
 
 ---
 
-### Migration / Rollback
-
-[How do we migrate to this decision? How can we roll it back if it fails?]
+## References
+- [python-nmap](https://xael.org/pages/python-nmap-en.html)
+- [Metasploit RPC API](https://docs.rapid7.com/metasploit/msfrpcd/)

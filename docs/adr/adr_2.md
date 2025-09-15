@@ -1,53 +1,61 @@
-# ADR_2
-Date: 2025-09-10 - Decider: Roman Shubin
+# ADR_2 Decision to use Python for Primary Language
+Date: 2025-09-15 - Decider: Roman Shubin
+
+**Status:** Accepted
 
 ---
 
-### Context and Problem Statement
+### Context
+The CLI tool requires a language that is flexible, has strong library support for penetration testing tasks, and integrates with external tools easily. Development speed, community support, and available wrappers/APIs are also key.
 
-[Describe the issue, problem, or context that requires a decision. Why is this ADR necessary? What constraints or forces are at play?]
+The tool requires:
+- Rich ecosystem of networking and security libraries
+- Easy integration with subprocess calls
+- Broad community adoption
+- Cross-platform support
 
 ---
 
 ### Decision
-
-[What decision has been made? State it clearly and concisely.]
+I have decided to use **Python 3.11** as the primary implementation language.
 
 ---
 
 ### Alternatives Considered
+- **Go (Golang)**  
+    * Pros: High performance, single static binary builds, great concurrency.  
+    * Cons: Fewer ready-made pentest wrappers, would require reimplementation.  
 
-[Option 1 — pros/cons]
+- **Rust**  
+    * Pros: Memory safety, performance.  
+    * Cons: Steeper learning curve, slower development cycle, fewer libraries.  
 
-[Option 2 — pros/cons]
-
-[Option 3 — pros/cons]
+- **Hybrid (Python + Go modules)**  
+    * Pros: Balance of ease and performance.  
+    * Cons: More complex workflow and packaging.  
 
 ---
 
-### Rationale
-
-[Why was this decision chosen? Which factors made it the most appropriate?]
-
---- 
-
 ### Consequences
 Positive
-
-[List benefits]
+- Leverages a huge ecosystem of pentesting-related libraries  
+- Rapid development and prototyping  
+- Easy onboarding for new contributors  
 
 Negative
-
-[List trade-offs, downsides, risks]
+- Slower runtime performance vs compiled languages  
+- Larger distribution size if packaged into a binary  
+- Requires dependency management and auditing  
 
 ---
 
 ### Implementation Plan
-
-[How will this be implemented? Tools, libraries, rollout steps, etc.]
+- Use Python 3.11+  
+- Dependency pinning with `requirements.txt`  
+- Static analysis with Bandit, linting with flake8  
+- Package distribution with Docker and PyInstaller
 
 ---
 
-### Migration / Rollback
-
-[How do we migrate to this decision? How can we roll it back if it fails?]
+## References
+- [Python.org](https://www.python.org/)
