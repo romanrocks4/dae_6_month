@@ -1,5 +1,5 @@
 
-# DAE 6 month cybersecurity course
+# DAE 6 month cybersecurity course.
 
 [![pages-deployment-status](https://github.com/romanrocks4/dae_6_month/actions/workflows/pages/pages-build-deployment/badge.svg)](https://github.com/romanrocks4/dae_6_month/actions/workflows/pages/pages-build-deployment)
 
