@@ -9,8 +9,18 @@ packages = [{include = "cli_tool"}]
 [tool.poetry.dependencies]
 python = "^3.11"
 click = "^8.2.1"
-theharvester = "^0.0.1"
+requests = "^2.31.0"
+rich = "^13.7.0"
+PyYAML = "^6.0.1"
 
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^7.4.0"
+pytest-cov = "^4.1.0"
+black = "^23.9.0"
+flake8 = "^6.1.0"
+mypy = "^1.6.0"
+pre-commit = "^3.5.0"
 
 [build-system]
 requires = ["poetry-core"]
@@ -18,4 +28,4 @@ build-backend = "poetry.core.masonry.api"
 
 
 [tool.poetry.scripts]
-pentest = "cli_tool.pentest:cli"
+pentestctl = "cli_tool.cli:main"
