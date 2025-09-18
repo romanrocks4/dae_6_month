@@ -1,0 +1,23 @@
+# Nmap 7.94SVN scan initiated Tue Sep 16 18:11:41 2025 as: nmap -p 3389 --script rdp-ntlm-info,rdp-enum-encryption -oN 239_rdp_info.txt 192.168.1.239
+Nmap scan report for 192.168.1.239
+Host is up (0.016s latency).
+
+PORT     STATE SERVICE
+3389/tcp open  ms-wbt-server
+| rdp-ntlm-info: 
+|   Target_Name: WIN-FVANFN2P7CG
+|   NetBIOS_Domain_Name: WIN-FVANFN2P7CG
+|   NetBIOS_Computer_Name: WIN-FVANFN2P7CG
+|   DNS_Domain_Name: WIN-FVANFN2P7CG
+|   DNS_Computer_Name: WIN-FVANFN2P7CG
+|   Product_Version: 10.0.19041
+|_  System_Time: 2025-09-16T18:11:46+00:00
+| rdp-enum-encryption: 
+|   Security layer
+|     CredSSP (NLA): SUCCESS
+|     CredSSP with Early User Auth: SUCCESS
+|     RDSTLS: SUCCESS
+|     SSL: SUCCESS
+|_  RDP Protocol Version: Unknown
+
+# Nmap done at Tue Sep 16 18:11:43 2025 -- 1 IP address (1 host up) scanned in 1.83 seconds

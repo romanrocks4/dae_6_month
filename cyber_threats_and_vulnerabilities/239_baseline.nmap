@@ -1,0 +1,20 @@
+# Nmap 7.94SVN scan initiated Tue Sep 16 18:10:00 2025 as: nmap -sS -sV -O --reason --open -Pn -T4 -oA 239_baseline 192.168.1.239
+Nmap scan report for 192.168.1.239
+Host is up, received user-set (0.0094s latency).
+Not shown: 996 filtered tcp ports (no-response)
+Some closed ports may be reported as filtered due to --defeat-rst-ratelimit
+PORT     STATE SERVICE       REASON          VERSION
+135/tcp  open  msrpc         syn-ack ttl 127 Microsoft Windows RPC
+139/tcp  open  netbios-ssn   syn-ack ttl 127 Microsoft Windows netbios-ssn
+445/tcp  open  microsoft-ds? syn-ack ttl 127
+3389/tcp open  ms-wbt-server syn-ack ttl 127 Microsoft Terminal Services
+Warning: OSScan results may be unreliable because we could not find at least 1 open and 1 closed port
+Device type: general purpose
+Running (JUST GUESSING): Microsoft Windows 2019|10|XP (89%)
+OS CPE: cpe:/o:microsoft:windows_10 cpe:/o:microsoft:windows_xp::sp2
+Aggressive OS guesses: Microsoft Windows Server 2019 (89%), Microsoft Windows 10 1909 (87%), Microsoft Windows XP SP2 (87%)
+No exact OS matches for host (test conditions non-ideal).
+Service Info: OS: Windows; CPE: cpe:/o:microsoft:windows
+
+OS and Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+# Nmap done at Tue Sep 16 18:10:16 2025 -- 1 IP address (1 host up) scanned in 16.10 seconds

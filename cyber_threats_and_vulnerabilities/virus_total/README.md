@@ -2,18 +2,13 @@
 
 ---
 
-## Screenshot 1 — Detection Summary
+![Malware Bazaar](malware.png)
+I started by navigating to Malware Bazaar and choosing a file to download.
 
 ![VirusTotal Detection Summary](virus_summary.png)
-
-VirusTotal detection overview showing the sample hash and detection ratio.
-
----
-
-## Screenshot 2 — Behavior & Sandbox Reports
+Then I went to VirusTotal and scanned the malware. The screenshot shows the VirusTotal detection overview showing the sample hash and detection ratio.
 
 ![VirusTotal Behavior Summary](virus_behavior.png)
-
 VirusTotal behavior tab showing grouped sandbox reports, MITRE signatures, dropped files, and network communications summary.
 
 ---
