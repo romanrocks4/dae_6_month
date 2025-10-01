@@ -20,7 +20,7 @@ def recon():
 @click.option("--target", "-t", required=True, help="Target domain")
 @click.option("--modules", "-m", default="theharvester", help="Comma-separated list of modules")
 @click.option("--output", "-o", help="Output file path")
-@click.option("--source", "-s", default="google", help="theHarvester source")
+@click.option("--source", "-s", default="duckduckgo", help="theHarvester source")
 @click.option("--limit", "-l", default=100, help="theHarvester limit")
 def run(target, modules, output, source, limit):
     """Run reconnaissance against target."""
@@ -65,11 +65,22 @@ def run_theharvester(domain: str, source: str, limit: int) -> Dict[str, Any]:
             # More robust parsing of theHarvester output
             for line in output_lines:
                 line = line.strip()
-                if "@" in line and "." in line and not line.startswith("["):
+                # Skip theHarvester banner/header lines and empty lines
+                if ("@" in line and "." in line and 
+                    not line.startswith("[") and 
+                    not line.startswith("*") and
+                    not "cmartorella@edge-security.com" in line and
+                    not "theHarvester" in line and
+                    line != "*" and
+                    len(line) > 3):
                     # Basic email validation
                     if line.count("@") == 1 and "." in line.split("@")[1]:
                         emails.append(line)
-                elif (line.startswith(domain) or line.endswith(f".{domain}")) and ":" not in line:
+                elif ((line.startswith(domain) or line.endswith(f".{domain}")) and 
+                      ":" not in line and 
+                      not line.startswith("*") and
+                      not "theHarvester" in line and
+                      len(line) > 3):
                     hosts.append(line)
             
             return {
@@ -151,7 +162,7 @@ def display_recon_results(results: Dict[str, Dict[str, Any]]):
 
 @recon.command()
 @click.option("--target", "-t", required=True, help="Target domain")
-@click.option("--source", "-s", default="google", help="Source to use")
+@click.option("--source", "-s", default="duckduckgo", help="Source to use")
 @click.option("--limit", "-l", default=100, help="Result limit")
 def emails(target, source, limit):
     """Extract emails for target domain."""

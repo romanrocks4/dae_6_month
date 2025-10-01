@@ -1,0 +1,16 @@
+Metadata-Version: 2.3
+Name: cli-tool
+Version: 0.1.0
+Summary: This is my cli pentesting tool.
+Author: Roman Shubin
+Author-email: roman.shubin27@gmail.com
+Requires-Python: >=3.11,<4.0
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.11
+Classifier: Programming Language :: Python :: 3.12
+Classifier: Programming Language :: Python :: 3.13
+Requires-Dist: click (>=8.2.1,<9.0.0)
+Requires-Dist: theharvester (>=0.0.1,<0.0.2)
+Description-Content-Type: text/markdown
+
+
