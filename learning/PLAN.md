@@ -42,38 +42,33 @@ For each task include Title, Description, Start date, Target completion date, a 
 
 -   **Description:** For this task I will download and integrate trivy into my CLI tool
 -   **Start date:** 2025-10-01
--   **Target completion date:** 2025-10-01
+-   **Target completion date:** 2025-10-02
 -   **Success criterion:** Trivy is downloaded and works when called within my project. The code used contains no errors and has proper syntax.
 -   **Proof method (what I will capture to show success):** a screenshot of Trivy being ran from my tool, capturing, and displaying the results.
 -   **Where I will start Task 1:** Within the vuln.py file of my CLI tool.
 
-**Task 2 — :**
+**Task 2 — Run a local folder scan with Trivy:**
 
--   **Description:**
--   **Start date:** YYYY-MM-DD
--   **Target completion date:** YYYY-MM-DD
--   **Success criterion (explicit):**
--   **Proof method (what I will capture to show success):**
+-   **Description:** For this task I will use Trviy to scan a local folder for insecure depenencies.
+-   **Start date:** 2025-10-06
+-   **Target completion date:** 2025-10-09
+-   **Success criterion:** Running mytool vuln --fs ./project_folder lists vulnerabilities in dependencies.
+-   **Proof method:** Screenshot of scan output showing detected CVEs.
 
-**Task 3 — Title:**
+**Task 3 — Generate a report with Trivy:**
 
--   **Description:**
--   **Start date:** YYYY-MM-DD
--   **Target completion date:** YYYY-MM-DD
--   **Success criterion (explicit):**
--   **Proof method (what I will capture to show success):**
-
-> Note: Keep each task small enough that one task = one focused change or one short demo.
+-   **Description:** For this task I will use Trivy's JSON capabilities to export the scan results into a JSON file.
+-   **Start date:** 2025-10-13
+-   **Target completion date:** 2025-10-16
+-   **Success criterion:** A JSON file should be generated from Trivy with the info from the scan in the file.
+-   **Proof method:** Upload and commit the generated JSON/HTML report.
 
 ---
 
-## Risks, assumptions, and blockers (one-line each)
+## Risks, assumptions, and blockers
 
-List any access or external requirements that could block completion. For example:
-
--   Requires remote DB credentials.
--   Needs API key for third-party service.
--   Depends on another repo update.
+-  Need a vulnerable local folder to text the scan in task 2.
+-  Need to use the file generation in CLI tool and integrate it. 
 
 ---
 
@@ -87,37 +82,3 @@ List any access or external requirements that could block completion. For exampl
 I will replace the above with exact dates in the tasks section once I finalize them.
 
 ---
-
-## Example (model entry — replace with my own)
-
-**Name:** Alex Example  
-**Date created:** 2025-09-01
-
-**Chosen technology:** FastAPI 0.95
-
-**Why:** FastAPI lets me add a small HTTP endpoint to our capstone API so I can demonstrate endpoint design and tests.
-
-**Task 1 — Add user-summary endpoint**
-
--   **Description:** Add `GET /users/{id}/summary` returning aggregated profile data.
--   **Start date:** 2025-09-02
--   **Target completion date:** 2025-09-08
--   **Success criterion:** A unit or integration test demonstrates the endpoint returns expected JSON for sample data.
--   **Proof method:** I will capture a screenshot of the CI test passing and paste one curl example and expected JSON into `learning/README.md`.
--   **Where I will start Task 1:** local branch `feature/user-summary`
-
-**Task 2 — Request counter & health-check**
-
--   **Description:** Add an in-memory counter for endpoint requests and expose `/health`.
--   **Start date:** 2025-09-09
--   **Target completion date:** 2025-09-15
--   **Success criterion:** Health-check test fails when service is down and passes when service is up.
--   **Proof method:** I will save a short terminal recording or screenshot showing the health-check response and note the test run in `learning/README.md`.
-
-**Task 3 — Mini-tutorial**
-
--   **Description:** Write a one-page tutorial in `learning/README.md` showing how to call the endpoint with example response.
--   **Start date:** 2025-09-16
--   **Target completion date:** 2025-09-22
--   **Success criterion:** Tutorial includes a curl example and expected JSON and a screenshot or short recorded response.
--   **Proof method:** I will save the tutorial to `learning/README.md` with a screenshot or short recorded command output link.
