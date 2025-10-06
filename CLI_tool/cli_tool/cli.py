@@ -11,7 +11,7 @@ from rich.prompt import Prompt
 from rich.text import Text
 
 # Import modules
-from cli_tool.modules import recon, vuln
+from cli_tool.modules import recon, vuln, scan, ai
 from cli_tool.core import project
 
 console = Console()
@@ -47,22 +47,14 @@ main.add_command(project.init)
 main.add_command(project.profile)
 main.add_command(recon.recon)
 main.add_command(vuln.vuln)
+main.add_command(scan.scan)
+main.add_command(ai.ai)
 
 # Simple placeholder commands for other modules
-@main.command()
-def scan():
-    """Network scanning (placeholder)."""
-    console.print("🔍 Scanning not fully implemented yet")
-
 @main.command()
 def exploit():
     """Exploitation (placeholder)."""
     console.print("💥 Exploitation not fully implemented yet")
-
-@main.command()
-def ai():
-    """AI-powered analysis (placeholder)."""
-    console.print("🤖 AI module not fully implemented yet")
 
 @main.command()
 def report():
@@ -145,11 +137,22 @@ def show_help():
     help_text.append("  recon run --target <domain>     Run reconnaissance\n")
     help_text.append("  recon emails --target <domain>  Extract emails\n\n")
     
-    help_text.append("🔍 Other Modules:\n", style="yellow")
-    help_text.append("  scan                            Network scanning\n")
-    help_text.append("  vuln                            Vulnerability analysis\n")
-    help_text.append("  exploit                         Exploitation\n")
-    help_text.append("  ai                              AI analysis\n")
+    help_text.append("🔍 Scanning:\n", style="yellow")
+    help_text.append("  scan run --target <ip/domain> --ports <ports>  Run network scan\n\n")
+    
+    help_text.append("🛡️  Vulnerability Analysis:\n", style="red")
+    help_text.append("  vuln run --target <ip/domain>   Run vulnerability scan\n\n")
+    
+    help_text.append("🤖 AI Analysis:\n", style="blue")
+    help_text.append("  ai report --project <name>      Generate AI report\n")
+    help_text.append("  ai summarize --input <file>     Summarize findings\n")
+    help_text.append("  ai triage --input <file>        Triage vulnerabilities\n")
+    help_text.append("  ai ask <question>               Ask AI assistant\n\n")
+    
+    help_text.append("💣 Exploitation:\n", style="red")
+    help_text.append("  exploit                         Exploitation tools\n\n")
+    
+    help_text.append("📑 Reporting:\n", style="magenta")
     help_text.append("  report                          Report generation\n\n")
     
     help_text.append("🚪 Shell Commands:\n", style="magenta")

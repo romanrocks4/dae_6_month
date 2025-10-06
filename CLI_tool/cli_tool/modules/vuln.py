@@ -8,6 +8,7 @@ import json
 from rich.console import Console
 from rich.table import Table
 from typing import Dict, Any
+from cli_tool.core.project import ProjectManager
 
 console = Console()
 
@@ -142,7 +143,8 @@ def vuln():
 @click.option("--scan-type", "-s", default="image", help="Scan type (image, fs, config)")
 @click.option("--severity", default="HIGH,CRITICAL", help="Severity levels to report")
 @click.option("--output", "-o", help="Output file path (JSON format)")
-def run(target, modules, scan_type, severity, output):
+@click.option("--project", "-p", help="Project name to save results to")
+def run(target, modules, scan_type, severity, output, project):
     """Run vulnerability analysis against target."""
     console.print(f"🛡️  Starting vulnerability analysis on {target}")
     
@@ -163,7 +165,12 @@ def run(target, modules, scan_type, severity, output):
             console.print(f"⚠️  Unknown module: {module}")
             results[module] = {"status": "unknown", "results": []}
     
-    # Save results if output specified
+    # Save results to project if specified
+    if project:
+        pm = ProjectManager(project)
+        pm.save_finding("trivy", target, results)
+    
+    # Save results to file if output specified
     if output:
         with open(output, 'w') as f:
             json.dump(results, f, indent=2)

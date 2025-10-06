@@ -8,6 +8,7 @@ import click
 from rich.console import Console
 from rich.table import Table
 from typing import Dict, List, Any
+from cli_tool.core.project import ProjectManager
 
 console = Console()
 
@@ -22,7 +23,8 @@ def recon():
 @click.option("--output", "-o", help="Output file path")
 @click.option("--source", "-s", default="duckduckgo", help="theHarvester source")
 @click.option("--limit", "-l", default=100, help="theHarvester limit")
-def run(target, modules, output, source, limit):
+@click.option("--project", "-p", help="Project name to save results to")
+def run(target, modules, output, source, limit, project):
     """Run reconnaissance against target."""
     console.print(f"🕵️  Starting reconnaissance on {target}")
     
@@ -41,6 +43,11 @@ def run(target, modules, output, source, limit):
     
     # Display results
     display_recon_results(results)
+    
+    # Save results to project if specified
+    if project:
+        pm = ProjectManager(project)
+        pm.save_finding("recon", target, results)
     
     # Save results if output specified
     if output:
@@ -164,7 +171,8 @@ def display_recon_results(results: Dict[str, Dict[str, Any]]):
 @click.option("--target", "-t", required=True, help="Target domain")
 @click.option("--source", "-s", default="duckduckgo", help="Source to use")
 @click.option("--limit", "-l", default=100, help="Result limit")
-def emails(target, source, limit):
+@click.option("--project", "-p", help="Project name to save results to")
+def emails(target, source, limit, project):
     """Extract emails for target domain."""
     console.print(f"📧 Extracting emails for {target}")
     result = run_theharvester(target, source, limit)
@@ -177,3 +185,8 @@ def emails(target, source, limit):
         console.print(email_table)
     else:
         console.print("❌ No emails found or error occurred")
+    
+    # Save results to project if specified
+    if project:
+        pm = ProjectManager(project)
+        pm.save_finding("recon-emails", target, result)
