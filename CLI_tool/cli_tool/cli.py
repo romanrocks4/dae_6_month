@@ -9,12 +9,17 @@ from rich.console import Console
 from rich.panel import Panel
 from rich.prompt import Prompt
 from rich.text import Text
+from pathlib import Path
 
 # Import modules
 from cli_tool.modules import recon, vuln, scan, ai
 from cli_tool.core import project
+from cli_tool.reporting import report
 
 console = Console()
+
+# Global variable to store last command output
+last_command_output = ""
 
 @click.group(invoke_without_command=True)
 @click.version_option(version="0.1.0", prog_name="pentestctl")
@@ -49,17 +54,27 @@ main.add_command(recon.recon)
 main.add_command(vuln.vuln)
 main.add_command(scan.scan)
 main.add_command(ai.ai)
+main.add_command(report.report)
 
 # Simple placeholder commands for other modules
 @main.command()
 def exploit():
     """Exploitation (placeholder)."""
-    console.print("💥 Exploitation not fully implemented yet")
+    output = "💥 Exploitation not fully implemented yet"
+    console.print(output)
+    save_last_command_output(output)
 
-@main.command()
-def report():
-    """Report generation (placeholder)."""
-    console.print("📄 Report generation not fully implemented yet")
+def save_last_command_output(output):
+    """Save the last command output to a temporary file for AI module access."""
+    global last_command_output
+    last_command_output = output
+    try:
+        temp_output_file = Path(__file__).parent.parent / ".pentestctl_last_output"
+        with open(temp_output_file, 'w') as f:
+            f.write(output)
+    except Exception:
+        # Silently fail if we can't save the output
+        pass
 
 @main.command()
 def shell():
@@ -107,9 +122,13 @@ def shell():
                     # Click raises SystemExit on completion, catch it to continue the shell
                     pass
                 except click.ClickException as e:
-                    console.print(f"❌ Error: {e.message}")
+                    error_output = f"❌ Error: {e.message}"
+                    console.print(error_output)
+                    save_last_command_output(error_output)
                 except Exception as e:
-                    console.print(f"❌ Unexpected error: {str(e)}")
+                    error_output = f"❌ Unexpected error: {str(e)}"
+                    console.print(error_output)
+                    save_last_command_output(error_output)
                 finally:
                     # Restore original argv
                     sys.argv = original_argv
@@ -144,16 +163,16 @@ def show_help():
     help_text.append("  vuln run --target <ip/domain>   Run vulnerability scan\n\n")
     
     help_text.append("🤖 AI Analysis:\n", style="blue")
-    help_text.append("  ai report --project <name>      Generate AI report\n")
-    help_text.append("  ai summarize --input <file>     Summarize findings\n")
-    help_text.append("  ai triage --input <file>        Triage vulnerabilities\n")
+    help_text.append("  ai summarize <file|'.'>         Summarize findings (use '.' for last command)\n")
+    help_text.append("  ai triage <file|'.'>            Triage vulnerabilities (use '.' for last command)\n")
     help_text.append("  ai ask <question>               Ask AI assistant\n\n")
+    
+    help_text.append("📑 Reporting:\n", style="magenta")
+    help_text.append("  report generate --project <name>  Generate AI-powered pentest report\n")
+    help_text.append("  report template                   Generate report from template\n\n")
     
     help_text.append("💣 Exploitation:\n", style="red")
     help_text.append("  exploit                         Exploitation tools\n\n")
-    
-    help_text.append("📑 Reporting:\n", style="magenta")
-    help_text.append("  report                          Report generation\n\n")
     
     help_text.append("🚪 Shell Commands:\n", style="magenta")
     help_text.append("  help, h                         Show this help\n")

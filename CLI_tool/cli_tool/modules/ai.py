@@ -6,6 +6,7 @@ import click
 import json
 import os
 from pathlib import Path
+from datetime import datetime
 import google.generativeai as genai
 from rich.console import Console
 from cli_tool.core.project import ProjectManager
@@ -16,31 +17,6 @@ console = Console()
 def ai():
     """AI-powered analysis commands."""
     pass
-
-@ai.command()
-@click.option("--input", "-i", required=True, help="Input file to summarize")
-@click.option("--length", "-l", default="medium", help="Summary length")
-def summarize(input, length):
-    """AI-powered summarization of scan results."""
-    console.print(f"🤖 Summarizing {input}")
-    console.print("⚠️  AI module not fully implemented yet")
-    # TODO: Implement AI summarization
-
-@ai.command()
-@click.option("--input", "-i", required=True, help="Input vulnerabilities")
-def triage(input):
-    """AI-powered vulnerability triage."""
-    console.print(f"🧠 Triaging vulnerabilities from {input}")
-    console.print("⚠️  AI triage not fully implemented yet")
-    # TODO: Implement AI triage
-
-@ai.command()
-@click.argument("question")
-def ask(question):
-    """Ask AI assistant a question."""
-    console.print(f"💭 Question: {question}")
-    console.print("⚠️  AI assistant not fully implemented yet")
-    # TODO: Implement AI Q&A
 
 def load_api_key():
     """Load API key from environment or .env file."""
@@ -59,78 +35,247 @@ def load_api_key():
     
     return None
 
+def get_last_command_output():
+    """Get the output from the last pentestctl command."""
+    # Try to get output from a temporary file where last command output is stored
+    temp_output_file = Path(__file__).parent.parent.parent / ".pentestctl_last_output"
+    if temp_output_file.exists():
+        try:
+            with open(temp_output_file, 'r') as f:
+                return f.read()
+        except Exception:
+            pass
+    return None
+
 @ai.command()
-@click.option("--project", "-p", required=True, help="Project name to generate report for")
-@click.option("--output", "-o", default="report.md", help="Output file for the report")
-@click.option("--api-key", "-k", help="Gemini API key (or set GEMINI_API_KEY environment variable)")
-def report(project, output, api_key):
-    """Generate a pentesting report from project findings using Gemini AI."""
-    # Get API key from parameter, environment variable, or .env file
-    gemini_api_key = api_key or load_api_key()
+@click.argument("input", type=click.STRING, required=False)
+@click.option("--length", "-l", default="medium", help="Summary length")
+def summarize(input, length):
+    """AI-powered summarization of scan results.
+    
+    INPUT: Path to input file or '.' to use output from last command.
+    """
+    # Handle the special case of "." for last command output
+    if input == ".":
+        scan_data = get_last_command_output()
+        if not scan_data:
+            console.print("❌ No previous command output found. Run a command first or specify an input file.")
+            return
+        console.print("🔍 Using output from last command...")
+    elif input:
+        # Read from specified input file
+        try:
+            with open(input, 'r') as f:
+                scan_data = f.read()
+        except Exception as e:
+            console.print(f"❌ Failed to read input file: {e}")
+            return
+    else:
+        console.print("❌ Please specify an input file or use '.' for last command output.")
+        return
+    
+    # Load API key
+    gemini_api_key = load_api_key()
     if not gemini_api_key:
         console.print("❌ Gemini API key not provided. Set GEMINI_API_KEY in environment, .env file, or use --api-key option.")
         return
     
-    # Initialize Gemini
     try:
+        # Initialize Gemini
         genai.configure(api_key=gemini_api_key)
-        # Use a working model
         model = genai.GenerativeModel('gemini-2.0-flash')
     except Exception as e:
         console.print(f"❌ Failed to initialize Gemini: {e}")
         return
     
-    # Get project findings
-    pm = ProjectManager(project)
-    findings = pm.get_all_findings()
+    # Map length option to descriptive text
+    length_desc = {
+        "short": "brief",
+        "medium": "detailed but concise",
+        "long": "comprehensive"
+    }.get(length, "detailed")
     
-    if not findings:
-        console.print("⚠️  No findings found in the project.")
-        return
-    
-    # Prepare the data for the AI
-    console.print("🔍 Analyzing project findings...")
-    project_data = {
-        "project_name": project,
-        "findings_count": len(findings),
-        "findings": findings
-    }
-    
-    # Create prompt for report generation
+    # Create prompt for summarization
     prompt = f"""
-    You are a professional penetration tester and security expert. Based on the following penetration testing findings, 
-    create a comprehensive security report with the following structure:
+    You are a professional penetration tester and security expert. Please provide a {length_desc} summary of the following scan results.
     
-    1. Executive Summary
-    2. Methodology
-    3. Findings Analysis
-    4. Risk Assessment
-    5. Recommendations
-    6. Conclusion
+    Scan Data:
+    {scan_data}
     
-    For each finding, include:
-    - Description of the issue
-    - Risk level (Critical, High, Medium, Low)
-    - Technical details
-    - Impact assessment
-    - Remediation steps
+    Please structure your summary with the following sections:
     
-    Project Data:
-    {json.dumps(project_data, indent=2)}
+    ## Executive Summary
+    - Overall security posture assessment
+    - Key findings and risks identified
     
-    Please provide a professional, detailed security report in Markdown format.
+    ## Technical Overview
+    - Types of scans performed
+    - Scope of assessment
+    - Methodology summary
+    
+    ## Critical Findings
+    - Most severe vulnerabilities or issues
+    - Immediate risk assessment
+    
+    ## Recommendations
+    - Prioritized actions to address findings
+    - Best practices for remediation
+    
+    Keep the summary focused on the most important security implications and actionable insights.
     """
     
     try:
-        # Generate report using Gemini
-        console.print("🤖 Generating report with Gemini AI...")
+        console.print(f"🤖 Summarizing scan results ({length} length)...")
         response = model.generate_content(prompt)
         
-        # Save report to file
-        with open(output, 'w') as f:
+        # Save summary to file
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        output_file = f"summary_{timestamp}.md"
+        with open(output_file, 'w') as f:
             f.write(response.text)
         
-        console.print(f"✅ Report generated successfully and saved to {output}")
+        console.print(f"✅ Summary generated successfully!")
+        console.print(f"📄 Summary saved to {output_file}")
+        console.print("\n📋 Summary preview:")
+        console.print(response.text[:500] + "..." if len(response.text) > 500 else response.text)
         
     except Exception as e:
-        console.print(f"❌ Failed to generate report: {e}")
+        console.print(f"❌ Failed to generate summary: {e}")
+
+@ai.command()
+@click.argument("input", type=click.STRING, required=False)
+def triage(input):
+    """AI-powered vulnerability triage.
+    
+    INPUT: Path to input file or '.' to use output from last command.
+    """
+    # Handle the special case of "." for last command output
+    if input == ".":
+        vulnerabilities_data = get_last_command_output()
+        if not vulnerabilities_data:
+            console.print("❌ No previous command output found. Run a command first or specify an input file.")
+            return
+        console.print("🔍 Using output from last command...")
+    elif input:
+        # Read from specified input file
+        try:
+            with open(input, 'r') as f:
+                vulnerabilities_data = f.read()
+        except Exception as e:
+            console.print(f"❌ Failed to read input file: {e}")
+            return
+    else:
+        console.print("❌ Please specify an input file or use '.' for last command output.")
+        return
+    
+    # Load API key
+    gemini_api_key = load_api_key()
+    if not gemini_api_key:
+        console.print("❌ Gemini API key not provided. Set GEMINI_API_KEY in environment, .env file, or use --api-key option.")
+        return
+    
+    try:
+        # Initialize Gemini
+        genai.configure(api_key=gemini_api_key)
+        model = genai.GenerativeModel('gemini-2.0-flash')
+    except Exception as e:
+        console.print(f"❌ Failed to initialize Gemini: {e}")
+        return
+    
+    # Create prompt for vulnerability triage
+    prompt = f"""
+    You are a professional cybersecurity expert specializing in vulnerability assessment and risk management. 
+    Please analyze the following vulnerability data and provide a prioritized triage assessment.
+    
+    Vulnerability Data:
+    {vulnerabilities_data}
+    
+    Please provide your analysis in the following format:
+    
+    ## Vulnerability Triage Report
+    
+    ### Critical Priority (Immediate Action Required)
+    - List vulnerabilities that require immediate attention with brief justification
+    
+    ### High Priority (Address Within 24-72 Hours)
+    - List high priority vulnerabilities with brief justification
+    
+    ### Medium Priority (Address Within 1 Week)
+    - List medium priority vulnerabilities with brief justification
+    
+    ### Low Priority (Address During Next Maintenance Window)
+    - List low priority vulnerabilities with brief justification
+    
+    ### Summary Recommendations
+    - Overall risk assessment
+    - Recommended remediation approach
+    - Any additional security considerations
+    
+    For each vulnerability, include:
+    - CVE ID (if applicable)
+    - Risk level justification
+    - Potential impact
+    - Recommended remediation steps
+    """
+    
+    try:
+        console.print("🧠 Analyzing vulnerabilities with Gemini AI...")
+        response = model.generate_content(prompt)
+        
+        # Save triage report to file
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        output_file = f"triage_report_{timestamp}.md"
+        with open(output_file, 'w') as f:
+            f.write(response.text)
+        
+        console.print(f"✅ Vulnerability triage completed successfully!")
+        console.print(f"📄 Triage report saved to {output_file}")
+        console.print("\n📊 Summary of findings:")
+        console.print(response.text[:500] + "..." if len(response.text) > 500 else response.text)
+        
+    except Exception as e:
+        console.print(f"❌ Failed to triage vulnerabilities: {e}")
+
+@ai.command()
+@click.argument("question")
+def ask(question):
+    """Ask AI assistant a question."""
+    # Load API key
+    gemini_api_key = load_api_key()
+    if not gemini_api_key:
+        console.print("❌ Gemini API key not provided. Set GEMINI_API_KEY in environment, .env file, or use --api-key option.")
+        return
+    
+    try:
+        # Initialize Gemini
+        genai.configure(api_key=gemini_api_key)
+        model = genai.GenerativeModel('gemini-2.0-flash')
+    except Exception as e:
+        console.print(f"❌ Failed to initialize Gemini: {e}")
+        return
+    
+    # Create prompt for the question
+    prompt = f"""
+    You are a professional cybersecurity expert and penetration tester. Please answer the following question 
+    with detailed, accurate, and practical information related to cybersecurity and penetration testing.
+    
+    Question: {question}
+    
+    Please provide:
+    1. A clear and direct answer to the question
+    2. Relevant technical details or examples
+    3. Best practices or recommendations when applicable
+    4. Any important caveats or considerations
+    """
+    
+    try:
+        console.print(f"💭 Processing question: {question}")
+        response = model.generate_content(prompt)
+        
+        console.print("✅ Response:")
+        console.print(response.text)
+        
+    except Exception as e:
+        console.print(f"❌ Failed to get response: {e}")
+
+

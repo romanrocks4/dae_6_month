@@ -7,8 +7,8 @@
 ## 1. Project Title & Version Control
 - **Project:** All-in-one CLI pentesting tool  
 - **Version:** DRAFT  
-- **Last updated:** September, 17, 2025 
-- **Change log:** N/A
+- **Last updated:** October, 8, 2025 
+- **Change log:** Added real-time AI functionality with "." input support
 
 ---
 
@@ -51,7 +51,7 @@ Pentesting workflows contain many repetitive steps and often require switching b
 - **Reporting:** Custom scripts → Markdown, PDF, HTML.
 
 **AI & ML (new additions):**
-- **Model access:** OpenAI API (for hosted LLMs) *and* support for local/self-hosted models via Hugging Face / Transformers / GGML backends for offline/air-gapped usage.  
+- **Model access:** Google Gemini API (for hosted LLMs) *and* support for local/self-hosted models via Hugging Face / Transformers / GGML backends for offline/air-gapped usage.  
 - **Prompt orchestration / chains:** LangChain or a lightweight internal orchestration layer.  
 - **Embeddings & vector DB:** For storing and searching previous findings, use FAISS / Annoy / Chroma (local option).  
 - **NLP utils:** spaCy / NLTK for lightweight parsing, metadata extraction.  
@@ -81,8 +81,8 @@ pentestctl recon run --target example.com --modules amass,theHarvester --output 
 pentestctl scan run --target example.com --modules nmap,masscan --ports 1-65535
 pentestctl vuln run --target example.com --modules nikto,openvas --credentials creds.json
 pentestctl exploit run --target example.com --module metasploit --exploit CVE-XXXX-YYYY
-pentestctl ai summarize --input project/recon.json --length short
-pentestctl report generate --template standard --format pdf --include-ai-summary
+pentestctl ai summarize project/recon.json --length short
+pentestctl report generate --project myproject --output report/draft.md
 ```
 
 **AI CLI examples**
@@ -91,11 +91,29 @@ pentestctl report generate --template standard --format pdf --include-ai-summary
 pentestctl ai ask "Which assets appear most at risk in project/recon.json?"
 
 # Auto-triage vulnerabilities and assign risk levels using AI + rules
-pentestctl ai triage --input project/vulns.json --output project/vulns_triaged.json
+pentestctl ai triage project/vulns.json
 
-# Draft a pentest report using AI to summarize findings
-pentestctl ai report --input project/ --template pentest-template.md --output report/draft.pdf
+# Summarize scan results
+pentestctl ai summarize project/recon.json
+
+# Real-time AI analysis using output from the last command
+pentestctl recon run --target example.com --modules theharvester
+pentestctl ai summarize .    # Summarize the output from the recon command
+pentestctl ai triage .       # Triage vulnerabilities from the last command
 ```
+
+**Report Generation**
+```
+# Generate a pentest report using AI to summarize findings
+pentestctl report generate --project myproject --output report/draft.md
+```
+
+**Real-time AI functionality:**
+The AI module now supports real-time analysis using the special "." input parameter. After running any command (recon, scan, vuln), you can immediately use `pentestctl ai summarize .` or `pentestctl ai triage .` to analyze the output from the last command without needing to specify a file.
+
+- `pentestctl ai summarize project/recon.json --length medium --provenance` → returns a machine and human readable summary + evidence links.  
+- `pentestctl ai triage project/vulns.json --format json` → outputs triaged vulnerabilities with severity and confidence.
+- `pentestctl recon run --target example.com --modules theharvester` followed by `pentestctl ai summarize .` → summarizes the output from the recon command immediately.
 
 ---
 
@@ -112,6 +130,7 @@ pentestctl ai report --input project/ --template pentest-template.md --output re
 - **Week 10:** Design report builder.  
 - **Week 11:** Polish CLI, error handling, colorized outputs, help menus.  
 - **Week 12:** **AI integration finishing:** finalize AI module, prompts, embeddings index, user privacy options; troubleshoot and push to GitHub with docs.
+- **Week 13:** **Real-time AI functionality:** implement "." input support for immediate analysis of command output.
 
 ---
 
@@ -142,15 +161,17 @@ pentestctl ai report --input project/ --template pentest-template.md --output re
 - **Natural Language Assistant:** allow users to ask questions about results and receive context-aware answers.  
 - **Report Drafting:** generate first-draft reports (Markdown/PDF) with findings, remediation suggestions, and evidence links.  
 - **Workflow Automation:** suggest next steps (e.g., follow-up scans, fuzzing targets) and provide command snippets.
+- **Real-time Analysis:** enable immediate AI analysis of command output using "." input parameter.
 
 ### 12.2 Components
 - **AI Connector:** pluggable interface supporting:
-  - Hosted LLMs (OpenAI, Anthropic, etc.) via API.
+  - Hosted LLMs (Google Gemini, OpenAI, Anthropic, etc.) via API.
   - Local models via Hugging Face / transformers / ggml for air-gapped use.
 - **Prompt Templates & Chains:** curated prompts for each AI task (summarize, triage, question answering). Store templates in `ai/prompts/`.
 - **Embeddings & Search:** compute embeddings per finding to enable quick similarity search for repeated issues across engagements.
 - **Explainability & Provenance:** include the list of source documents (scanner output lines) used to produce each summary/claim.
 - **Permissions & Safety:** per-project toggles for sending data offsite; anonymization/redaction options; logs for all AI calls.
+- **Real-time Output Storage:** temporary storage mechanism for capturing and accessing the output of the last executed command.
 
 ### 12.3 Example prompt templates (simplified)
 - **Summarize scanner output**
@@ -165,12 +186,13 @@ pentestctl ai report --input project/ --template pentest-template.md --output re
 - Audit logs to show what was sent to which model and when.  
 - Config options:
   - `ai.offsite=false` (do not call hosted APIs)
-  - `ai.model=local-ggml` / `ai.model=openai-gpt-4o`
+  - `ai.model=local-ggml` / `ai.model=gemini-pro`
   - `ai.provenance=true` (attach evidence)
 
 ### 12.5 UX examples (AI)
-- `pentestctl ai summarize --input project/recon.json --length medium --provenance` → returns a machine and human readable summary + evidence links.  
-- `pentestctl ai triage --input project/vulns.json --format json` → outputs triaged vulnerabilities with severity and confidence.
+- `pentestctl ai summarize project/recon.json --length medium --provenance` → returns a machine and human readable summary + evidence links.  
+- `pentestctl ai triage project/vulns.json --format json` → outputs triaged vulnerabilities with severity and confidence.
+- `pentestctl recon run --target example.com --modules theharvester` followed by `pentestctl ai summarize .` → summarizes the output from the recon command immediately.
 
 ---
 
@@ -179,29 +201,33 @@ pentestctl ai report --input project/ --template pentest-template.md --output re
 2. Security mechanism to prevent vulnerabilities in the tool itself.  
 3. Potential GUI and cross-platform support for broader user base.  
 4. Expand AI features: automated remediation suggestions, continuous learning (with user approvals), community-shared prompt recipes, and telemetry (opt-in) to improve triage models.
+5. Enhanced real-time functionality with support for multiple previous commands and command history.
 
 ---
 
 ## 14. Implementation Checklist (practical next steps)
-- [ ] Pick CLI framework (Click recommended).  
-- [ ] Define normalized JSON schema for all tool outputs.  
-- [ ] Implement Adapter interface and a first adapter (e.g., Nmap).  
-- [ ] Implement project DB (SQLite) + basic CLI `init` & `profile` commands.  
-- [ ] Implement reporting templates (Markdown → PDF).  
-- [ ] Build AI connector with:
+- [x] Pick CLI framework (Click recommended).  
+- [x] Define normalized JSON schema for all tool outputs.  
+- [x] Implement Adapter interface and a first adapter (e.g., Nmap).  
+- [x] Implement project DB (SQLite) + basic CLI `init` & `profile` commands.  
+- [x] Implement reporting templates (Markdown → PDF).  
+- [x] Build AI connector with:
   - local model fallback,
-  - OpenAI (or chosen provider) connector,
-  - prompt templates for summarize/triage/report.  
-- [ ] Add AI privacy/redaction options and audit logs.  
-- [ ] Add test suite and CI; document install & usage; push to GitHub.
+  - Google Gemini connector,
+  - prompt templates for summarize/triage.  
+- [x] Add AI privacy/redaction options and audit logs.  
+- [x] Add test suite and CI; document install & usage; push to GitHub.
+- [x] Implement real-time AI functionality with "." input support.
+- [ ] Add command history tracking for enhanced real-time functionality.
+- [ ] Implement multiple previous command storage for complex workflows.
 
 ---
 
 ## 15. Appendix — Suggested Libraries & Resources
 - **CLI & packaging:** Click, Poetry.  
 - **API & adapters:** Requests / httpx, python-msfrpc, python-nmap.  
-- **AI/LLM:** openai, langchain, transformers, sentence-transformers (embeddings).  
+- **AI/LLM:** google-generativeai, langchain, transformers, sentence-transformers (embeddings).  
 - **Vector DB:** FAISS, Chroma.  
 - **DB:** SQLite (SQLModel/SQLAlchemy).  
 - **Reporting:** Markdown → Pandoc → PDF, WeasyPrint for HTML→PDF.  
-- **Testing:** pytest.  
+- **Testing:** pytest.

@@ -10,6 +10,7 @@ from rich.console import Console
 from rich.table import Table
 from typing import Dict, Any
 from cli_tool.core.project import ProjectManager
+from pathlib import Path
 
 console = Console()
 
@@ -179,6 +180,18 @@ def display_nmap_results(results: Dict[str, Any]):
         else:
             console.print("   🔒 No open ports found")
 
+def save_output_for_ai(data):
+    """Save command output to temporary file for AI module access."""
+    try:
+        # Convert data to a readable format
+        output_str = json.dumps(data, indent=2)
+        temp_output_file = Path(__file__).parent.parent / ".pentestctl_last_output"
+        with open(temp_output_file, 'w') as f:
+            f.write(output_str)
+    except Exception:
+        # Silently fail if we can't save the output
+        pass
+
 @click.group()
 def scan():
     """Network scanning commands."""
@@ -219,3 +232,6 @@ def run(target, modules, ports, flags, output, project):
         with open(output, 'w') as f:
             json.dump(results, f, indent=2)
         console.print(f"💾 Results saved to {output}")
+    
+    # Save output to temporary file for AI module
+    save_output_for_ai(results)

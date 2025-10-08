@@ -9,6 +9,7 @@ from rich.console import Console
 from rich.table import Table
 from typing import Dict, List, Any
 from cli_tool.core.project import ProjectManager
+from pathlib import Path
 
 console = Console()
 
@@ -54,6 +55,21 @@ def run(target, modules, output, source, limit, project):
         with open(output, 'w') as f:
             json.dump(results, f, indent=2)
         console.print(f"💾 Results saved to {output}")
+    
+    # Save output to temporary file for AI module
+    save_output_for_ai(results)
+
+def save_output_for_ai(data):
+    """Save command output to temporary file for AI module access."""
+    try:
+        # Convert data to a readable format
+        output_str = json.dumps(data, indent=2)
+        temp_output_file = Path(__file__).parent.parent / ".pentestctl_last_output"
+        with open(temp_output_file, 'w') as f:
+            f.write(output_str)
+    except Exception:
+        # Silently fail if we can't save the output
+        pass
 
 def run_theharvester(domain: str, source: str, limit: int) -> Dict[str, Any]:
     """Run theHarvester against target."""
@@ -190,3 +206,6 @@ def emails(target, source, limit, project):
     if project:
         pm = ProjectManager(project)
         pm.save_finding("recon-emails", target, result)
+    
+    # Save output to temporary file for AI module
+    save_output_for_ai(result)
