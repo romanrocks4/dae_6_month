@@ -1,0 +1,16 @@
+ai:
+  enabled: true
+  provider: google
+  offsite: false
+  model: gemini-pro
+tools:
+  nmap:
+    default_flags: "-sV"
+  theharvester:
+    default_source: "duckduckgo"
+    default_limit: 100
+safety:
+  scope_check: true
+  excluded_networks:
+    - "127.0.0.0/8"
+    - "10.0.0.0/8"

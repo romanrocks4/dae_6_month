@@ -72,9 +72,9 @@ class ProjectManager:
                 },
                 "ai": {
                     "enabled": True,
-                    "provider": "openai",
+                    "provider": "Google",
                     "offsite": False,
-                    "model": "gpt-3.5-turbo"
+                    "model": "gemini-2.0-flash"
                 },
                 "safety": {
                     "scope_check": True,

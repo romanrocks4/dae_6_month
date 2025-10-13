@@ -18,18 +18,38 @@ def report():
 
 def load_api_key():
     """Load API key from environment or .env file."""
+    import sys
+    from pathlib import Path
+    
     # Check environment variable first
     api_key = os.getenv("GEMINI_API_KEY")
     if api_key:
         return api_key
     
     # Check .env file in project root
-    env_path = Path(__file__).parent.parent.parent / ".env"
-    if env_path.exists():
-        with open(env_path, 'r') as f:
-            for line in f:
-                if line.startswith("GEMINI_API_KEY="):
-                    return line.strip().split("=", 1)[1]
+    # Try multiple possible locations for the .env file
+    project_root = Path(__file__).parent.parent.parent
+    possible_paths = [
+        project_root / ".env",  # Project root
+        Path.cwd() / ".env",    # Current working directory
+        Path.home() / ".env",   # Home directory
+    ]
+    
+    # Remove duplicates and non-existent paths
+    unique_paths = []
+    for path in possible_paths:
+        if path not in unique_paths and path.exists():
+            unique_paths.append(path)
+    
+    for env_path in unique_paths:
+        try:
+            with open(env_path, 'r') as f:
+                for line in f:
+                    if line.startswith("GEMINI_API_KEY="):
+                        key = line.strip().split("=", 1)[1]
+                        return key
+        except Exception as e:
+            print(f"Error reading .env file: {e}", file=sys.stderr)
     
     return None
 
@@ -118,7 +138,7 @@ def generate(project, output, api_key):
 
 @report.command()
 @click.option("--template", "-t", default="standard", help="Report template")
-@click.option("--format", "-f", default="markdown", help="Output format")
+@click.option("--format", "-f", default="text", help="Output format")
 @click.option("--output", "-o", help="Output file")
 def template(template, format, output):
     """Generate pentest report from template."""
