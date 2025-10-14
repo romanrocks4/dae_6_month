@@ -1,5 +1,5 @@
 Scope:
- - Target: Metasploitable2 VM (192.168.56.101) on isolated lab network.
+ - Target: Metasploitable2 VM (192.168.1.139) on isolated lab network.
  - Allowed: Scanning, vulnerability verification, controlled exploitation for research.
  - Not Allowed: Lateral movement to host, internet access, attacks on other devices.
 

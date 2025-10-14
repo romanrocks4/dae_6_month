@@ -2,6 +2,16 @@
 
 This is the read me file for my penetration course. This file contains a step by step process on how I set up, identified, exploited, and documented a penetration test.
 
+| Category           | Details                                                                                           |
+|--------------------|---------------------------------------------------------------------------------------------------|
+| Target IP          | 192.168.1.139                                                                                     |
+| Testing Environment| Parrot OS (attacker), Metasploitable2 (target)                                                   |
+| Type of Test       | Network Penetration Test                                                                          |
+| Authorization      | Controlled lab environment, user-owned systems                                                   |
+| Standards Used     | PTES methodology (Information Gathering → Exploitation → Reporting)                              |
+| Tools              | Nmap, FTP client (vsftpd 2.3.4), Metasploit, Manual analysis                           |
+
+
 ---
  
 ## Step 1: Setup
@@ -250,6 +260,56 @@ Nmap done: 1 IP address (1 host up) scanned in 74.12 seconds
 
 ## Step 3: Exploitation
 
-Out of all of the possible vulnerabilites, I chose the FTP server because of its simple exploitation and streamlined design. I looked up "FTP Anon" and found that when a use creates an FTP server, they need to change the default credentials. This user however, made the mistake of leaving the credentials, making it vulnerable.
+Out of all of the possible vulnerabilites, I chose the FTP server because of its simple exploitation and streamlined design. I looked up "FTP Anon" and found that when a user creates an FTP server, they need to change the default credentials. This user however, made the mistake of leaving the credentials, making it vulnerable.
 
 ![alt text](ftp.png "FTP")
+
+With this knowledge I now can now perform the exploit.
+
+```
+┌─[✗]─[root@parrot]─[/home/user]
+└──╼ #ftp 192.168.1.139
+Connected to 192.168.1.139.
+220 (vsFTPd 2.3.4)
+Name (192.168.1.139:user): ftp
+331 Please specify the password.
+Password: 
+230 Login successful.
+Remote system type is UNIX.
+Using binary mode to transfer files.
+ftp> ls
+229 Entering Extended Passive Mode (|||20411|).
+150 Here comes the directory listing.
+226 Directory send OK.
+ftp> dir
+229 Entering Extended Passive Mode (|||9639|).
+150 Here comes the directory listing.
+226 Directory send OK.
+ftp> 
+
+```
+I have officially gained access to the ftp server and the users files anonymously, completing the exploit.
+
+## Step 4: Remediation
+
+For remediation I researched the vulnerability and compiled a report below.
+
+### Identified Vulnerability
+The vulnerability was an **Anonymous FTP Login** on the target system running **vsftpd 2.3.4**.  
+This configuration allows users to connect without authentication and access the server’s files.
+
+### Impact Assessment
+If left unaddressed, this issue could:
+- Allow unauthorized users to **view, modify, or upload files**.
+- Be used as an entry point for **privilege escalation** or **data exfiltration**.
+- Lead to **further exploitation** of the system via uploaded malicious files or information leakage.
+
+### Recommended Remediation Steps
+
+| Step | Action | Description |
+|------|---------|-------------|
+| 1 | Disable Anonymous Login | Edit `/etc/vsftpd.conf` and set `anonymous_enable=NO` |
+| 2 | Enforce User Authentication | Require valid system credentials or a dedicated FTP user group. |
+| 3 | Update Software | Upgrade to the latest version of **vsftpd** to patch known vulnerabilities. |
+| 4 | Limit Access | Restrict FTP access using firewalls or allow only trusted IP addresses. |
+| 5 | Use Encryption | Configure **FTPS (FTP over SSL/TLS)** to protect credentials and data in transit. |
