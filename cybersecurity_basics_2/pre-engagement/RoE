@@ -1,0 +1,57 @@
+
+# RULES OF ENGAGEMENT (RoE)
+
+**Project Name:** Cybersecurity Basics 2 
+**Tester:** Roman Shubin 
+**RoE Version:** 1    **Date:** 10/20/25
+
+---
+
+## 1. AUTHORIZATION
+Authorizes Tester to perform the agreed security testing on the in-scope assets listed below within the defined timeframe. Tester will act only within this RoE and any signed addenda.
+
+---
+
+## 2. SCOPE (IN-SCOPE)
+
+IP/CIDR, hostnames, apps, test accounts
+
+---
+
+## 3. OUT OF SCOPE
+
+production payment systems, physical/social engineering, DoS, unauthorised data exfiltration.
+
+---
+
+## 4. AUTHORIZED TESTS
+-  Passive OSINT  
+-  Active discovery (nmap, limited scans)  
+-  Web app testing (seed accounts only)  
+-  Auth/credential checks (seed accounts only)  
+-  Internal network tests (lab/test subnet only)  
+
+---
+
+## 5. SCHEDULE & COORDINATION
+**Test window:** From 10/20/25 to 10/23/25
+**Tester lead:** Name & Email: Roman Shubin & roman.shubin27@gmail.com 
+
+---
+
+## 6. SAFETY & ABORT
+If testing causes service degradation or unexpected impact, Tester will immediately stop, notify Client on-call, and follow rollback instructions. Abort on outages to business-critical systems.
+
+---
+
+## 8. EVIDENCE & HANDLING
+**Evidence types:** screenshots, logs, pcaps, config exports.  
+**Storage:** encrypted at rest, limited access (Tester personnel only).  
+**Manifest:** evidence_id, filename, sha256, timestamp.  
+Reports will redact secrets; full unredacted artifacts remain in secure evidence store.
+
+---
+
+## 9. DELIVERABLES & TIMELINE
+- **Full technical report:** due 1 day after completion  
+- **Optional retest:** schedule upon remediation
