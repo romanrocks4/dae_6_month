@@ -1,0 +1,152 @@
+# SOC Team — Security Operations Center (SOC) Fundamentals  
+**Project:** Zero Trust Pentest Simulation — “Acme Finance”  
+**Document Owner:** SOC Lead: `Roman Shubin`  
+**Date:** `10/21/2025`  
+**Scope:** Monitoring, detection, and response during an authorized penetration test targeting the organization’s Zero Trust Architecture (ZTA). All actions are simulated/documented; no unauthorized testing.
+
+---
+
+## 1. Purpose & Scope
+This document describes SOC roles, monitoring configuration, alerting workflows, investigation steps, and evidence collected during an authorized pentest that simulates adversary activity against the organization’s ZTA. The SOC's goal is to detect, investigate, and contain test activity while preserving evidence and enabling red/blue collaboration.
+
+---
+
+## 2. SOC Roles & Responsibilities (≥ 3 roles)
+- **Tier 1 Analyst (Monitoring / Triage)**  
+  - Monitor dashboards and alerts, perform initial triage, create/ticket incidents, escalate per runbook.  
+  - Responsible for: validating alerts, capturing initial logs, assigning severity.
+
+- **Tier 2 Analyst / Incident Responder (Investigation / Containment)**  
+  - Deep-dive investigations (host logs, network pcap, EDR telemetry), run containment actions (block IPs, isolate host), coordinate with forensics.  
+  - Responsible for: root cause analysis, containment playbook execution.
+
+- **SOC Manager / Coordinator (Communication & Governance)**  
+  - Coordinate escalation to IT/IR/legal, sign off on containment actions that affect operations, maintain communication with pentest lead.  
+  - Responsible for: resource allocation, report sign-off, interfacing with CISO.
+
+---
+
+## 3. Monitoring Architecture & Tooling
+**Primary Stack (simulated):**
+- **SIEM:** Wazuh / Splunk Free (log aggregation, correlation, alerting)  
+- **EDR/HIPS:** Wazuh agent / OSSEC (host telemetry, process creation, file integrity)  
+- **Network IDS:** Suricata or Snort (network signatures, flow detection)  
+- **Packet capture:** tcpdump / Zeek (for detailed network analysis)
+
+**Log sources ingested**
+- Host logs: `/var/log/auth.log`, `/var/log/syslog`  
+- Application logs: `financeapp_access.log`, `financeapp_error.log`  
+- Network IDS alerts: Suricata/Zeek output  
+- EDR telemetry: process creation, child process tree, file integrity events
+
+---
+
+## 4. Monitoring Configuration — Example Rules & Queries
+Below are the SOC rule examples used to detect typical pentest activity against ZTA components. Include these in the SIEM / rule repo.
+
+### 4.1 Rule A — SSH Brute-Force Detection (Wazuh/Splunk-like)
+**Description:** Alert on > 5 failed `sshd` logins in 5 minutes for same user or from same source IP.  
+**Pseudo-query (Splunk-like):**
+```
+index=auth sourcetype=syslog "Failed password" 
+| stats count by src_ip, user, _time span=5m 
+| where count > 5
+```
+**Action:** Create incident ticket; block IP via firewall automation; trigger Tier 2 investigation.
+
+### 4.2 Rule B — Suspicious Management Interface Upload
+**Description:** Detect POST requests to management endpoints (e.g., `/manager/text/upload`) or large suspicious file uploads.  
+**KQL-like:**
+```
+http.request.uri : "/manager/text/upload" OR http.request.method: POST AND http.request.body.size > 1048576
+```
+**Action:** Alert Tier 2; capture full HTTP transaction; isolate application instance if suspicious.
+
+### 4.3 Rule C — Lateral Movement Attempt (SMB Write from App Subnet)
+**Description:** Detect SMB write operations from non-admin subnets to internal file servers.  
+**Query (generic):**
+```
+event.module: "smb" AND event.action: "write" AND src_subnet: "app-subnet" 
+| stats count by src_ip,dst_ip,filename
+```
+**Action:** Notify network team; block flow via microsegmentation policy engine.
+
+---
+
+## 5. Monitored Activities (≥ 2)
+1. **Authentication anomalies** — failed/successful logins to IdP and host-level SSH (`/var/log/auth.log`).  
+2. **Application behavior** — HTTP 5xx spikes, unusual upload activity to admin endpoints, and anomalous API calls between `FinanceApp` and `FinanceDB`.
+
+Evidence collected (simulated):
+- `wazuh_alert_ssh_bruteforce.json` — alert for SSH brute-force.  
+- `http_transaction_capture.pcap` — captured POST to Tomcat manager endpoint (simulated).
+
+---
+
+## 6. Alert Management Workflow (two alerts demonstrated)
+**Alert 1 — SSH Brute Force**
+- **Trigger:** Rule A fired for IP `203.0.113.45`.  
+- **Tier 1 Actions:** Validate logs; escalate ticket `INC-2025-001`; gather `/var/log/auth.log` excerpt.  
+- **Tier 2 Actions:** Check EDR for process execution tied to the user, block IP on perimeter ACL, mark incident as *High*, preserve memory snapshot if suspicious.  
+- **Resolution Evidence:** `auth_log_excerpt.txt`, `block_ip_command.log`, `incident_ticket_INC-2025-001.pdf`.
+
+**Alert 2 — Management Upload Attempt**
+- **Trigger:** Rule B detected POST to `/manager/text/upload` (management console).  
+- **Tier 1 Actions:** Flag event, capture full HTTP request, check Origin and user-agent.  
+- **Tier 2 Actions:** Validate user session with IdP logs (was it a seed test account?), if unauthorized, disable account and rollback deployment.  
+- **Resolution Evidence:** `http_post_capture.txt`, `idp_signin_log_excerpt.txt`, `deployment_rollback.log`.
+
+---
+
+## 7. Investigation Playbook (short, SOC-focused)
+**Triage steps**
+1. Validate alert (check raw logs).  
+2. Correlate across logs: EDR, IDS, Netflow, IdP.  
+3. Enrich alert (WHO, WHAT, WHERE, WHEN) — username, src_ip, target host, timeline.  
+4. Assign severity and ownership.
+
+**Containment steps (SOC-driven)**
+- Automated network block (permitted by RoE).  
+- Quarantine host via microsegmentation policy (deny east-west and admin access).  
+- Disable compromised session/token at IdP.
+
+**Forensics handoff**
+- If host memory acquisition required, Tier 2 calls Forensics Lead; evidence custody established via manifest.
+
+---
+
+## 8. Threat Detection Example (MITRE mapping)
+**Observed Activity:** Repeated SYN scans followed by a small successful login and an attempted management upload.  
+**ATT&CK mapping:**
+- Reconnaissance: T1046 (Network Service Scanning)  
+- Initial Access: T1078 (Valid Accounts) — using credentialed access  
+- Persistence/Execution: T1059 (Command and Scripting Interpreter) if scripts were invoked  
+**Detection:** IDS flagged network scan; SIEM flagged brute-force; EDR flagged suspicious child process spawn. Correlation led to containment.
+
+Evidence:  
+- `suricata_scan_alerts.log`  
+- `wazuh_alert_ssh_bruteforce.json`  
+- `edr_process_tree.txt`
+
+---
+
+## 9. SOC Lessons From Pentest Simulation
+- **Visibility gaps:** Test showed management console uploads were not fully logged at application level — add detailed request logging for admin endpoints.  
+- **Policy gaps:** Microsegmentation did not explicitly block app-subnet to file-server writes — tighten segmentation rules.  
+- **Detection tuning:** Reduce alert fatigue by adjusting thresholds and adding context enrichment (user risk score, device posture).
+
+---
+
+## 10. Deliverables & Artifacts (to attach)
+- `INC-2025-001.pdf` — incident ticket for SSH brute-force  
+- `wazuh_alert_ssh_bruteforce.json` — raw alert export  
+- `http_transaction_capture.pcap` — HTTP upload capture (simulated)  
+- `soc_playbook_short.md` — SOC playbook excerpt used during the simulation
+
+---
+
+## Sources
+
+-   [NIST SP 800-207: Zero Trust Architecture.](https://csrc.nist.gov/pubs/sp/800/207/final?)
+
+- [Incident Response Team depth chart: Roles & responsibilities.](https://www.wiz.io/academy/incident-response-team?)

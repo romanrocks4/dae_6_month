@@ -1,0 +1,170 @@
+# Incident Response Plan (IRP) — Incident Response Team
+
+**Project:** Zero Trust Simulation — “Acme Finance”  
+**Document Owner:** Incident Response Team Lead: `Roman Shubin`  
+**Date:** `10/21/2025`  
+**Environment:** Simulated / Documentation-only
+
+---
+
+## Purpose
+This IRP provides a structured, repeatable 5-step incident response framework (Preparation, Identification, Containment, Eradication, Recovery) and documents forensic and evidence-handling procedures used in the simulated engagement.
+
+---
+
+## 1. Preparation
+**Goals**
+- Establish roles, tools, communications, and evidence storage before incidents occur.
+
+**Team & Roles**
+- Incident Lead — overall coordination, escalation
+- Forensics Lead — evidence acquisition and analysis
+- IT Lead — containment and remediation actions
+- Communications Officer — internal/external notifications
+- Legal/Privacy Advisor — compliance and disclosure guidance
+
+**Tools**
+- SIEM: Wazuh/Splunk (simulated)
+- EDR/HIPS: Wazuh, OSSEC (simulated)
+- Forensics: Autopsy, Volatility
+- Network capture: tcpdump, Wireshark
+- Evidence repository: Encrypted S3 bucket or encrypted filesystem
+
+**Prepared Artifacts**
+- Contact list with 24/7 escalation numbers
+- Pre-approved isolation ACLs / scripts
+- Evidence storage location and access control
+- Chain-of-custody template (see Appendix A)
+
+---
+
+## 2. Identification
+**Detection Sources**
+- SIEM alerts (authentication anomalies, EDR alerts)
+- User reports (phishing, suspicious email)
+- Automated detection (IDS/IPS, anomalous network behavior)
+
+**Example Identification Scenario (simulated)**  
+- SIEM Alert ID: `ALERT-2025-SSH-001`  
+- Trigger: >10 failed SSH logins for user `finance_admin` within 5 minutes from IP `203.0.113.45`  
+- Initial actions: timestamp and capture relevant logs (`/var/log/auth.log`), note related EDR events.
+
+**Documentation to Collect**
+- Timestamped alert screenshot or export
+- Relevant log excerpts (auth logs, application logs)
+- Associated EDR/host telemetry IDs
+
+---
+
+## 3. Containment
+**Containment Strategy**
+- Short-term: quickly limit the impact (isolate host, block offending IPs, disable compromised accounts).
+- Long-term: maintain business continuity while ensuring attacker cannot persist or move laterally.
+
+**Containment Steps (simulated)**
+1. Isolate host from critical networks with pre-approved ACL (`quarantine-acl-apply.sh`).
+2. Block attacker IP(s) at perimeter and in host firewall (`iptables`/cloud SG).
+3. Suspend affected accounts (mark as password reset required).
+4. Preserve volatile data (memory image) if forensics required.
+
+**Evidence Tasks During Containment**
+- Create snapshots of host(s)
+- Capture volatile memory if elevated activity detected
+- Start tcpdump capturing relevant flows (limited capture window)
+
+---
+
+## 4. Eradication
+**Goals**
+- Remove malicious artifacts, close exploited vectors, and verify system integrity.
+
+**Typical Actions**
+- Remove malware files and malicious cron jobs
+- Revoke and rotate compromised credentials and keys
+- Apply security patches for exploited vulnerabilities
+- Validate removal via EDR scans and host integrity checks
+
+**Verification**
+- Run host file integrity checks (e.g., `Tripwire`/Wazuh FIM)
+- Validate database/application integrity (checksums, transaction logs)
+- Confirm EDR shows no active malicious processes
+
+---
+
+## 5. Recovery
+**Steps**
+1. Restore affected systems from trusted backups or rebuild from hardened images.
+2. Reintroduce host to production under monitoring.
+3. Monitor for reoccurrence (72–90 day heightened monitoring window).
+4. Complete post-incident testing and apply lessons learned.
+
+**Recovery Evidence**
+- Restore logs, backup checksums, validation reports
+- Monitoring logs showing normal behavior following return to service
+
+---
+
+## Forensics Basics (Example: Volatility Memory Analysis)
+**Acquisition**
+- Snapshot or `dd` memory image to a controlled host:  
+  `dd if=/dev/mem of=/evidence/mem_YYYYMMDD.raw bs=1M` (simulated acquisition only)
+
+**Analysis Steps**
+- List processes: `volatility -f mem.raw pslist`
+- Extract network connections: `volatility -f mem.raw netscan`
+- Dump suspicious process memory: `volatility -f mem.raw memdump -p <pid> -D ./dumps`
+
+**Hashing & Integrity**
+- Compute SHA256 immediately after acquisition:  
+  `sha256sum mem_YYYYMMDD.raw > mem_YYYYMMDD.raw.sha256`
+
+---
+
+## Evidence Collection & Chain-of-Custody
+**Required Evidence Types (minimum two)**
+- Log file excerpt: `/var/log/auth.log` (SSH failure sequence)
+- SIEM/EDR alert screenshot: `siem_alert_AL-2025-SSH-001.png`
+
+**Manifest Template Example**
+| Evidence ID | Filename | SHA256 | Collected By | Timestamp (UTC) | Description |
+|---|---:|---:|---:|---:|---|
+| EVID-001 | auth.log.excerpt | `<sha256>` | `<Your Name>` | `2025-10-01T14:23Z` | SSH brute-force attempt logs |
+| EVID-002 | siem_alert_AL-2025-SSH-001.png | `<sha256>` | `<Your Name>` | `2025-10-01T14:25Z` | SIEM alert screenshot |
+
+**Chain-of-Custody Entry (fillable)**
+- Evidence ID:  
+- Collected by:  
+- Date/Time (UTC):  
+- Method (scp/rsync/local copy):  
+- Destination storage path:  
+- SHA256:  
+- Notes / Redaction performed:
+
+---
+
+## Incident Triage & Prioritization (3 Example Incident Types)
+1. **Malware on Host** — Severity: *Critical* — Impact: potential service outage / data corruption  
+2. **SQL Injection Attempt** — Severity: *High* — Impact: data exposure or integrity compromise  
+3. **Phishing / Credential Theft** — Severity: *Medium* — Impact: account takeover risk
+
+Triage criteria include: impacted asset criticality, data sensitivity, exploitation evidence, and lateral movement capability.
+
+---
+
+## Post-Incident Analysis & Lessons Learned
+**Post-Incident Summary (simulated)**
+- Incident: SSH brute-force leading to credential compromise of a test account. Contained via isolation, rotation, and increased MFA enforcement.
+- Outcome: No data exfiltrated in simulation; remediation applied.
+
+**Lessons Learned**
+1. Expand MFA coverage and reduce fallback recovery channels.  
+2. Increase authentication log retention and implement automated anomaly detection for failed logins.  
+3. Harden account lockout policies and integrate adaptive rate-limiting at perimeter.
+
+---
+
+## Sources
+
+-   [NIST Incident Response Recommendations and Considerations for Cybersecurity Risk Management.](https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-61r3.pdf?)
+
+- [Incident Response : Plan, Process, and Best Practices.](https://www.exabeam.com/blog/incident-response/incident-response-6-steps-technologies-and-tips/?)

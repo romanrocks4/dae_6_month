@@ -1,0 +1,169 @@
+# Governance Team — Security Policies & Governance  
+**Project:** Zero Trust Pentest Simulation — “Acme Finance”  
+**Document Owner:** Governance Lead / CISO: `Roman Shubin`  
+**Date:** `10/21/2025`  
+**Scope:** Policy, governance, compliance, and evidence of enforcement during an authorized pentest exercise aimed at the target Zero Trust Architecture (ZTA). Document assumes simulation authorized by RoE.
+
+---
+
+## 1. Purpose & Scope
+This governance document defines the policy framework, roles & responsibilities, compliance mapping, and enforcement evidence demonstrating how organizational governance supports Zero Trust and the authorized pentest exercise. The policy set focuses on Access Control, Data Protection, and System Use, per rubric requirements.
+
+---
+
+## 2. Policy Development Framework
+**Approach:** Policies were developed using a risk-based approach aligned to NIST CSF and ISO 27001. Each policy follows a standard template:
+- **Purpose** — why policy exists  
+- **Scope** — systems & users covered  
+- **Responsibilities** — owners, approvers, enforcers  
+- **Definitions** — key terms  
+- **Policy Statements** — enforceable rules  
+- **Compliance & Exceptions** — process to request exceptions  
+- **Review Cycle** — policy review and update frequency
+
+Evidence (simulated): `policy_development_process.md`
+
+---
+
+## 3. Core Policies (≥ 3 areas)
+### 3.1 Access Control Policy
+**Highlights**
+- **RBAC model:** Users assigned roles (Finance, Ops, Admin) with least privilege.  
+- **MFA:** Required for all interactive and administrative logins.  
+- **Session management:** Idle timeouts and conditional access checks (device posture).  
+- **Privileged Access:** Just-in-time (JIT) provisioning for sensitive operations; approval workflow logged.
+
+**Enforcement Evidence (simulated)**
+- Screenshot: IdP policy requiring MFA for “Finance” group. (`idp_access_policy.png`)  
+- PAM audit log excerpt showing JIT session provisioning: `pam_jit_audit.log`.
+
+### 3.2 Data Protection Policy
+**Highlights**
+- **Data classification:** Public / Internal / Confidential / Restricted.  
+- **Encryption:** TLS 1.2+ for transit; AES-256 for data at rest.  
+- **Key Management:** Keys stored in HSM or cloud KMS with rotation policy.  
+- **Data handling:** Masking and DLP for sensitive items (PII, financial records).
+
+**Enforcement Evidence (simulated)**
+- Sample data classification matrix `data_classification.csv`  
+- CI script enforcing secrets in vault: `ci_check_script.sh` (see appendix).
+
+### 3.3 System Use & Acceptable Use Policy
+**Highlights**
+- Defines acceptable endpoint software, prohibited activities (unauthorized scripts), and monitoring consent.  
+- Users must acknowledge AUP on onboarding and annually.
+
+**Enforcement Evidence (simulated)**
+- Signed AUP list `aup_signed_2025.csv`  
+- Endpoint compliance scan report `endpoint_compliance_2025-10-01.pdf`
+
+---
+
+## 4. Governance Structure & Responsibilities
+**Leadership & Roles**
+- **CISO:** Policy owner and final approver.  
+- **Security Governance Board:** Quarterly review and risk acceptance.  
+- **IT Security:** Technical implementation and enforcement.  
+- **System Owners:** Ensure policy adherence per system.  
+- **Privacy Officer:** Data protection and compliance oversight.
+
+**Decision Authorities**
+- Minor exceptions approved by IT Security Lead; major exceptions require CISO and Legal sign-off.
+
+Evidence (simulated):
+- Governance RACI matrix `governance_raci.csv`  
+- Meeting minutes with policy approval `policy_approval_minutes.pdf`
+
+---
+
+## 5. Compliance & Standards Mapping
+**Primary standard:** NIST Cybersecurity Framework (CSF) mapped to policies.  
+**Examples of mapping:**
+- **PR.AC (Identity Management):** Mapped to Access Control Policy sections on RBAC & MFA.  
+- **DE.CM (Detect):** Mapped to SOC monitoring and SIEM ingestion.  
+- **RS (Response):** Mapped to IRP runbook.
+
+**Evidence (simulated):**
+- `nist_csf_mapping.xlsx` — one-page mapping table.
+
+---
+
+## 6. Policy Implementation & Enforcement (Demonstrate evidence)
+Policy documents are only effective if enforced. Below are concrete enforcement mechanisms and evidence demonstrating enforcement during the pentest simulation.
+
+### 6.1 Enforcing MFA & Conditional Access
+- **Mechanism:** IdP Conditional Access policies that check device compliance (MDM) before granting tokens.  
+- **Evidence:** IdP conditional policy export `idp_conditional_policy_export.json` and simulated sign-in logs showing a blocked attempt from an unmanaged device `idp_blocked_signin.log`.
+
+### 6.2 Enforcing Microsegmentation & Network Policies
+- **Mechanism:** Network policy engine (NSX / cloud SGs) implemented rules that restrict east-west flows; changes tracked via CMDB change records.  
+- **Evidence:** `microseg_rules.csv` and `microseg_change_log.csv` showing policy applied to block lateral flow after pentest detection.
+
+### 6.3 Enforcing Data Protection (DLP / Key Management)
+- **Mechanism:** CI pipeline rejects builds with hardcoded secrets; storage encrypted with KMS.  
+- **Evidence:** `ci_reject_log.txt` (package with unapproved dependency rejected), `kms_rotation_log.txt`.
+
+---
+
+## 7. Policy Feedback Loop & Continuous Improvement
+**How governance adapts after pentest simulation**
+1. **Remediation tracking:** All findings logged in ticketing system and tracked to closure.  
+2. **Policy update:** Where a pentest highlights gaps (e.g., missing logs for admin endpoints), policy is updated to require explicit logging and periodic audit.  
+3. **Training & Awareness:** Users notified of new or updated policies; targeted training for affected groups (Finance).
+
+Evidence (simulated):
+- `remediation_tracker.csv` showing issue `FIND-2025-01` assigned and closed.  
+- Updated policy version `access_control_v1.2.md` with new logging requirements.
+
+---
+
+## 8. Pentest-Specific Governance Items (ensuring safe, accountable tests)
+- **Rules of Engagement (RoE):** Approved short RoE template exists for the authorized pentest.  
+- **Whitelist & tagging:** Tester IPs whitelisted in SIEM to avoid accidental escalations.  
+- **Escalation & safe-stop:** Clear contacts and abort criteria documented in RoE.  
+- **Evidence custody:** Governance requires evidence manifest and limited retention.
+
+Evidence (simulated):
+- Signed RoE: `roedoc_signed.pdf`  
+- Evidence manifest excerpt: `evidence_manifest.csv`
+
+---
+
+## 9. Policy Examples & Excerpts (to include in appendix)
+- **Access Control Policy (excerpt)** — unique accounts, RBAC, MFA, JIT access.  
+- **Data Protection Policy (excerpt)** — classification and encryption requirements.  
+- **System Use Policy (excerpt)** — user obligations and monitoring consent.
+
+(Attach full policy files in submission).
+
+---
+
+## 10. Governance Metrics & KPIs
+**Sample KPIs to monitor governance effectiveness**
+- **MFA Coverage:** % of users with MFA enabled (target: 100%)  
+- **Patch Compliance:** % of hosts with critical updates applied within 30 days (target: ≥95%)  
+- **Policy Exceptions:** Number and age of open exceptions (target: ≤5 exceptions, ≤30 days)  
+- **Incident Remediation Time:** Mean time to remediation for pentest findings (target: ≤7 days for High)
+
+Evidence (simulated): `governance_kpi_dashboard.png`
+
+---
+
+## Appendix A — Policy Templates & Sign-off Forms
+- `access_control_policy.md` (full text)  
+- `data_protection_policy.md` (full text)  
+- `system_use_policy.md` (full text)  
+- Policy sign-off form template `policy_signoff_form.pdf`
+
+---
+
+## Closing Notes
+This governance document demonstrates how policies are designed, approved, enforced, and iterated to support Zero Trust capabilities and safe, accountable penetration testing.
+
+---
+
+## Sources
+
+-   [NIST SP 800-207: Zero Trust Architecture.](https://csrc.nist.gov/pubs/sp/800/207/final?)
+
+- [Types of Security Models: All you need to know – Clark-Wilson model.](https://sprinto.com/blog/types-of-security-models/?)
