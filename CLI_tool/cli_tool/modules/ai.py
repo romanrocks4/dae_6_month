@@ -257,9 +257,13 @@ def triage(input):
         console.print(f"❌ Failed to triage vulnerabilities: {e}")
 
 @ai.command()
-@click.argument("question")
-def ask(question):
+@click.argument("question", nargs=-1)
+@click.option("--length", "-l", default="short", help="Response length (short, medium, long)")
+def ask(question, length):
     """Ask AI assistant a question."""
+    # Join the question words into a single string
+    question_text = " ".join(question)
+    
     # Load API key
     gemini_api_key = load_api_key()
     if not gemini_api_key:
@@ -274,26 +278,29 @@ def ask(question):
         console.print(f"❌ Failed to initialize Gemini: {e}")
         return
     
+    # Map length option to descriptive text
+    length_desc = {
+        "short": "brief and direct",
+        "medium": "detailed but concise",
+        "long": "comprehensive with examples"
+    }.get(length, "brief and direct")
+    
     # Create prompt for the question
     prompt = f"""
-    You are a professional cybersecurity expert and penetration tester. Please answer the following question 
-    with detailed, accurate, and practical information related to cybersecurity and penetration testing.
+    You are a professional cybersecurity expert and penetration tester. 
+    Please answer the following question {length_desc}.
     
-    Question: {question}
+    Question: {question_text}
     
-    Please provide:
-    1. A clear and direct answer to the question
-    2. Relevant technical details or examples
-    3. Best practices or recommendations when applicable
-    4. Any important caveats or considerations
+    Provide a {length_desc} answer without unnecessary formatting.
     """
     
     try:
-        console.print(f"💭 Processing question: {question}")
+        console.print(f"💭 Processing question: {question_text}")
         response = model.generate_content(prompt)
         
         console.print("✅ Response:")
-        console.print(response.text)
+        console.print(response.text.strip())
         
     except Exception as e:
         console.print(f"❌ Failed to get response: {e}")

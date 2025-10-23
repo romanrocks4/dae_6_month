@@ -12,7 +12,7 @@ from rich.text import Text
 from pathlib import Path
 
 # Import modules
-from cli_tool.modules import recon, vuln, scan, ai
+from cli_tool.modules import recon, vuln, scan, ai, exploit
 from cli_tool.core import project
 from cli_tool.reporting import report
 
@@ -55,15 +55,10 @@ main.add_command(vuln.vuln)
 main.add_command(scan.scan)
 main.add_command(ai.ai)
 main.add_command(report.report)
+main.add_command(exploit.exploit)
 
+# Remove the old placeholder command since we now have the real exploit module
 # Simple placeholder commands for other modules
-@main.command()
-def exploit():
-    """Exploitation (placeholder)."""
-    output = "💥 Exploitation not fully implemented yet"
-    console.print(output)
-    save_last_command_output(output)
-
 def save_last_command_output(output):
     """Save the last command output to a temporary file for AI module access."""
     global last_command_output
@@ -162,6 +157,9 @@ def show_help():
     help_text.append("🛡️  Vulnerability Analysis:\n", style="red")
     help_text.append("  vuln run --target <ip/domain>   Run vulnerability scan\n\n")
     
+    help_text.append("💣 Exploitation:\n", style="red")
+    help_text.append("  exploit run --target <ip/domain> [--module <module>] [--payload <payload>]  Run exploitation\n\n")
+    
     help_text.append("🤖 AI Analysis:\n", style="blue")
     help_text.append("  ai summarize <file|'.'>         Summarize findings (use '.' for last command)\n")
     help_text.append("  ai triage <file|'.'>            Triage vulnerabilities (use '.' for last command)\n")
@@ -170,9 +168,6 @@ def show_help():
     help_text.append("📑 Reporting:\n", style="magenta")
     help_text.append("  report generate --project <name>  Generate AI-powered pentest report\n")
     help_text.append("  report template                   Generate report from template\n\n")
-    
-    help_text.append("💣 Exploitation:\n", style="red")
-    help_text.append("  exploit                         Exploitation tools\n\n")
     
     help_text.append("🚪 Shell Commands:\n", style="magenta")
     help_text.append("  help, h                         Show this help\n")
