@@ -9,26 +9,56 @@
 #   4. is_empty()     -> return True if the stack has no items
 #   5. size()         -> return how many items are in the stack
 # -----------------------------------------------------------------------------
-
-# The stack should be stored in a list called "stack"
 stack = []
 
 def push(value):
-    # TODO: add value to the top of the stack
-    # Write your code here
-     
+    stack.insert(0, value)
+
 def pop():
-    # TODO: remove and return the top value, or None if empty
-    # Write your code here
-     
+    num = len(stack)
+    if num > 0:
+        print(stack[0])
+        stack.pop(0)
+    else:
+        print("***")
+
 def peek():
-    # TODO: return the top value without removing it, or None if empty
-    # Write your code here
-     
+    num = len(stack)
+    if num > 0:
+        print(stack[0])
+    else:
+        print("***")
+
 def is_empty():
-    # TODO: return True if stack is empty, else False
-    # Write your code here
-     
+    num = len(stack)
+    if num < 1:
+        print("True")
+    else:
+        print("False")
+
 def size():
-    # TODO: return how many items are in the stack
-    # Write your code here
+    num = len(stack)
+    print(num)
+
+print("Hello!")
+
+while True :
+
+    cmd = input(">>:")
+
+    if cmd == "push":
+        value = input("Insert:")
+        push(value)
+    elif cmd == "pop":
+        pop()
+    elif cmd == "peek":
+        peek()
+    elif cmd == "is_empty":
+        is_empty()
+    elif cmd == "size":
+        size()
+    elif cmd == "quit":
+        print("Goodbye!")
+        break
+    else:
+        print("Invalid input...")
