@@ -44,7 +44,9 @@ class ProjectManager:
     
     def __init__(self, project_name: Optional[str] = None):
         self.project_name = project_name
-        self.project_dir = Path.cwd() / ".pentestctl" if not project_name else Path.cwd() / f".pentestctl-{project_name}"
+        # Always create projects in the CLI tool's directory
+        cli_tool_dir = Path(__file__).parent.parent.parent  # Go up three levels to get to the CLI tool root
+        self.project_dir = cli_tool_dir / "CLI-TOOL" if not project_name else cli_tool_dir / f"CLI-TOOL-{project_name}"
         self.db_path = self.project_dir / "project.db"
         self.config_path = self.project_dir / "config.yaml"
         self.findings_dir = self.project_dir / "findings"
@@ -141,6 +143,38 @@ class ProjectManager:
             return True
         except Exception as e:
             console.print(f"❌ Failed to save finding: {e}")
+            return False
+    
+    def save_detailed_log(self, tool: str, target: str, data: Dict[str, Any], log_type: str = "scan"):
+        """Save detailed logs to the project's findings directory."""
+        try:
+            # Ensure findings directory exists
+            self.findings_dir.mkdir(parents=True, exist_ok=True)
+            
+            # Create timestamp for the log file
+            timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+            
+            # Create log file name
+            log_filename = f"{log_type}_{tool}_{target.replace('/', '_')}_{timestamp}.json"
+            log_filepath = self.findings_dir / log_filename
+            
+            # Add metadata to the log data
+            log_data = {
+                "timestamp": timestamp,
+                "tool": tool,
+                "target": target,
+                "type": log_type,
+                "data": data
+            }
+            
+            # Save log to file
+            with open(log_filepath, 'w') as f:
+                json.dump(log_data, f, indent=2)
+            
+            console.print(f"📝 Detailed log saved to {log_filepath}")
+            return True
+        except Exception as e:
+            console.print(f"❌ Failed to save detailed log: {e}")
             return False
     
     def get_all_findings(self) -> List[Dict[str, Any]]:

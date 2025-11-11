@@ -10,7 +10,9 @@ class Config:
     """Configuration manager for pentestctl."""
     
     def __init__(self, config_path: Optional[str] = None):
-        self.config_path = Path(config_path) if config_path else Path.cwd() / ".pentestctl" / "config.yaml"
+        # Always use the CLI tool's directory
+        cli_tool_dir = Path(__file__).parent.parent.parent  # Go up three levels to get to the CLI tool root
+        self.config_path = Path(config_path) if config_path else cli_tool_dir / "CLI-TOOL" / "config.yaml"
         self._config: Dict[str, Any] = {}
         self.load()
     

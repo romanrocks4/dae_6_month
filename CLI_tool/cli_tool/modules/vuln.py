@@ -13,6 +13,13 @@ from pathlib import Path
 
 console = Console()
 
+
+@click.group()
+def vuln():
+    """Vulnerability analysis commands."""
+    pass
+
+
 def run_trivy(target: str, scan_type: str = "image", severity: str = "HIGH,CRITICAL") -> Dict[str, Any]:
     """Run Trivy vulnerability scanner against target."""
     console.print(f"🔍 Running Trivy {scan_type} scan on {target}")
@@ -133,22 +140,24 @@ def display_trivy_results(results: Dict[str, Any]):
     else:
         console.print("ℹ️  No detailed results in Trivy output")
 
-def save_output_for_ai(data):
-    """Save command output to temporary file for AI module access."""
-    try:
-        # Convert data to a readable format
-        output_str = json.dumps(data, indent=2)
-        temp_output_file = Path(__file__).parent.parent / ".pentestctl_last_output"
-        with open(temp_output_file, 'w') as f:
-            f.write(output_str)
-    except Exception:
-        # Silently fail if we can't save the output
-        pass
 
-@click.group()
-def vuln():
-    """Vulnerability analysis commands."""
-    pass
+def get_current_project():
+    """Get the current project from the context file."""
+    try:
+        # Look for the project file in the current working directory
+        project_file = Path.cwd() / ".pentestctl_current_project"
+        if project_file.exists():
+            with open(project_file, 'r') as f:
+                return f.read().strip()
+        # Also check in the CLI tool root directory
+        cli_tool_root = Path(__file__).parent.parent
+        project_file = cli_tool_root / ".pentestctl_current_project"
+        if project_file.exists():
+            with open(project_file, 'r') as f:
+                return f.read().strip()
+    except Exception:
+        pass
+    return None
 
 @vuln.command()
 @click.option("--target", "-t", required=True, help="Target to analyze (image name, filesystem path, or config path)")
@@ -160,6 +169,10 @@ def vuln():
 def run(target, modules, scan_type, severity, output, project):
     """Run vulnerability analysis against target."""
     console.print(f"🛡️  Starting vulnerability analysis on {target}")
+    
+    # Use current project if none specified
+    if not project:
+        project = get_current_project()
     
     module_list = [m.strip() for m in modules.split(',')]
     results = {}
@@ -182,6 +195,8 @@ def run(target, modules, scan_type, severity, output, project):
     if project:
         pm = ProjectManager(project)
         pm.save_finding("trivy", target, results)
+        # Save detailed log
+        pm.save_detailed_log("trivy", target, results, "vuln")
     
     # Save results to file if output specified
     if output:
@@ -191,3 +206,16 @@ def run(target, modules, scan_type, severity, output, project):
     
     # Save output to temporary file for AI module
     save_output_for_ai(results)
+
+def save_output_for_ai(data):
+    """Save command output to temporary file for AI module access."""
+    try:
+        # Convert data to a readable format
+        output_str = json.dumps(data, indent=2)
+        temp_output_file = Path(__file__).parent.parent / ".pentestctl_last_output"
+        with open(temp_output_file, 'w') as f:
+            f.write(output_str)
+    except Exception:
+        # Silently fail if we can't save the output
+        pass
+

@@ -138,6 +138,19 @@ def shell():
             console.print("\n👋 Goodbye!")
             break
 
+@main.command()
+@click.argument("project_name")
+def switch(project_name):
+    """Switch to a different project context."""
+    # Store the current project in a file for persistence
+    try:
+        project_file = Path(__file__).parent.parent / ".pentestctl_current_project"
+        with open(project_file, 'w') as f:
+            f.write(project_name)
+        console.print(f"✅ Switched to project: {project_name}")
+    except Exception as e:
+        console.print(f"❌ Failed to switch project: {e}")
+
 def show_help():
     """Display help information for the interactive shell."""
     help_text = Text()

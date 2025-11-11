@@ -1,0 +1,20 @@
+ai:
+  enabled: true
+  model: gemini-2.0-flash
+  offsite: false
+  provider: Google
+project:
+  created: '2025-11-11 13:32:38.063195'
+  name: heloo
+  scope_file: null
+safety:
+  excluded_networks:
+  - 127.0.0.0/8
+  - 10.0.0.0/8
+  scope_check: true
+tools:
+  nmap:
+    default_flags: -sV
+  theharvester:
+    default_limit: 100
+    default_source: duckduckgo

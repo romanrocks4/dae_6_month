@@ -1,11 +1,11 @@
 ai:
   enabled: true
-  model: gpt-3.5-turbo
+  model: gemini-2.0-flash
   offsite: false
-  provider: openai
+  provider: Google
 project:
-  created: /Users/romanshubin/Documents/dae_6_month/CLI_tool
-  name: test-project
+  created: '2025-11-11 13:38:50.657911'
+  name: test-switching
   scope_file: null
 safety:
   excluded_networks:
@@ -14,7 +14,7 @@ safety:
   scope_check: true
 tools:
   nmap:
-    default_flags: -sS -sV -O
+    default_flags: -sV
   theharvester:
     default_limit: 100
-    default_source: google
+    default_source: duckduckgo

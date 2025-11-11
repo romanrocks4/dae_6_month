@@ -180,6 +180,24 @@ def display_nmap_results(results: Dict[str, Any]):
         else:
             console.print("   🔒 No open ports found")
 
+def get_current_project():
+    """Get the current project from the context file."""
+    try:
+        # Look for the project file in the current working directory
+        project_file = Path.cwd() / ".pentestctl_current_project"
+        if project_file.exists():
+            with open(project_file, 'r') as f:
+                return f.read().strip()
+        # Also check in the CLI tool root directory
+        cli_tool_root = Path(__file__).parent.parent
+        project_file = cli_tool_root / ".pentestctl_current_project"
+        if project_file.exists():
+            with open(project_file, 'r') as f:
+                return f.read().strip()
+    except Exception:
+        pass
+    return None
+
 def save_output_for_ai(data):
     """Save command output to temporary file for AI module access."""
     try:
@@ -200,13 +218,17 @@ def scan():
 @scan.command()
 @click.option("--target", "-t", required=True, help="Target IP or domain")
 @click.option("--modules", "-m", default="nmap", help="Scanning modules (nmap, masscan)")
-@click.option("--ports", "-p", default="1-1000", help="Port range")
+@click.option("--ports", "-r", default="1-1000", help="Port range")
 @click.option("--flags", "-f", default="-sV", help="Nmap flags (default: -sV for version detection)")
 @click.option("--output", "-o", help="Output file path (JSON format)")
 @click.option("--project", "-p", help="Project name to save results to")
 def run(target, modules, ports, flags, output, project):
     """Run network scan against target."""
     console.print(f"🔍 Starting scan on {target}")
+    
+    # Use current project if none specified
+    if not project:
+        project = get_current_project()
     
     module_list = [m.strip() for m in modules.split(',')]
     results = {}
@@ -226,6 +248,8 @@ def run(target, modules, ports, flags, output, project):
     if project:
         pm = ProjectManager(project)
         pm.save_finding("nmap", target, results)
+        # Save detailed log
+        pm.save_detailed_log("nmap", target, results, "scan")
     
     # Save results to file if output specified
     if output:

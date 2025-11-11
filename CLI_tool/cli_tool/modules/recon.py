@@ -18,6 +18,24 @@ def recon():
     """Reconnaissance commands."""
     pass
 
+def get_current_project():
+    """Get the current project from the context file."""
+    try:
+        # Look for the project file in the current working directory
+        project_file = Path.cwd() / ".pentestctl_current_project"
+        if project_file.exists():
+            with open(project_file, 'r') as f:
+                return f.read().strip()
+        # Also check in the CLI tool root directory
+        cli_tool_root = Path(__file__).parent.parent
+        project_file = cli_tool_root / ".pentestctl_current_project"
+        if project_file.exists():
+            with open(project_file, 'r') as f:
+                return f.read().strip()
+    except Exception:
+        pass
+    return None
+
 @recon.command()
 @click.option("--target", "-t", required=True, help="Target domain")
 @click.option("--modules", "-m", default="theharvester", help="Comma-separated list of modules")
@@ -28,6 +46,10 @@ def recon():
 def run(target, modules, output, source, limit, project):
     """Run reconnaissance against target."""
     console.print(f"🕵️  Starting reconnaissance on {target}")
+    
+    # Use current project if none specified
+    if not project:
+        project = get_current_project()
     
     module_list = [m.strip() for m in modules.split(',')]
     results = {}
@@ -49,6 +71,8 @@ def run(target, modules, output, source, limit, project):
     if project:
         pm = ProjectManager(project)
         pm.save_finding("recon", target, results)
+        # Save detailed log
+        pm.save_detailed_log("recon", target, results, "recon")
     
     # Save results if output specified
     if output:
@@ -190,6 +214,10 @@ def display_recon_results(results: Dict[str, Dict[str, Any]]):
 @click.option("--project", "-p", help="Project name to save results to")
 def emails(target, source, limit, project):
     """Extract emails for target domain."""
+    # Use current project if none specified
+    if not project:
+        project = get_current_project()
+    
     console.print(f"📧 Extracting emails for {target}")
     result = run_theharvester(target, source, limit)
     
@@ -199,13 +227,13 @@ def emails(target, source, limit, project):
         for email in result["emails"]:
             email_table.add_row(email)
         console.print(email_table)
-    else:
-        console.print("❌ No emails found or error occurred")
     
     # Save results to project if specified
     if project:
         pm = ProjectManager(project)
-        pm.save_finding("recon-emails", target, result)
+        pm.save_finding("emails", target, result)
+        # Save detailed log
+        pm.save_detailed_log("emails", target, result, "recon")
     
     # Save output to temporary file for AI module
     save_output_for_ai(result)
