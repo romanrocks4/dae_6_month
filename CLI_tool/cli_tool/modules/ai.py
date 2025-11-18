@@ -154,7 +154,7 @@ def summarize(input, length):
         with open(output_file, 'w') as f:
             f.write(response.text)
         
-        console.print(f"✅ Summary generated successfully!")
+        console.print("✅ Summary generated successfully!")
         console.print(f"📄 Summary saved to {output_file}")
         console.print("\n📋 Summary preview:")
         console.print(response.text[:500] + "..." if len(response.text) > 500 else response.text)
@@ -248,7 +248,7 @@ def triage(input):
         with open(output_file, 'w') as f:
             f.write(response.text)
         
-        console.print(f"✅ Vulnerability triage completed successfully!")
+        console.print("✅ Vulnerability triage completed successfully!")
         console.print(f"📄 Triage report saved to {output_file}")
         console.print("\n📊 Summary of findings:")
         console.print(response.text[:500] + "..." if len(response.text) > 500 else response.text)
