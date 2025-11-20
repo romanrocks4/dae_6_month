@@ -1,0 +1,19 @@
+version: '3.8'
+
+services:
+  misp:
+    image: harvarditsecurity/misp
+    ports:
+      - "8080:80"
+
+  opensearch:
+    image: opensearchproject/opensearch:latest
+    environment:
+      - discovery.type=single-node
+    ports:
+      - "9200:9200"
+
+  thehive:
+    image: strangebee/thehive
+    ports:
+      - "9000:9000"
