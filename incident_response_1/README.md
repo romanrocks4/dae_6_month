@@ -1,6 +1,6 @@
-# Penetration Testing 1
+# Incident Response 1
 
-This is the read me file for my penetration course. This file contains a step by step process on how I set up, identified, exploited, and documented a penetration test.
+This is the read me file for my incident response course. This file contains a step by step process on how I set up, identified, exploited, and documented a penetration test.
 
 | Category           | Details                                                                                           |
 |--------------------|---------------------------------------------------------------------------------------------------|
